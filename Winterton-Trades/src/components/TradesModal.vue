@@ -33,8 +33,8 @@ function generateTrades(): Trade[] {
 
   for (let i = 0; i < 50; i++) {
     const tradeTime = new Date(now.getTime() - i * (60000 * (3 + Math.random() * 30)))
-    const pair = pairs[Math.floor(Math.random() * pairs.length)]
-    const base = basePrices[pair]
+    const pair = pairs[Math.floor(Math.random() * pairs.length)]!
+    const base = basePrices[pair]!
     const price = base * (1 + (Math.random() - 0.5) * 0.01)
     const type: 'Buy' | 'Sell' = Math.random() > 0.45 ? 'Buy' : 'Sell'
     const quantity = pair.startsWith('BTC')
@@ -52,7 +52,7 @@ function generateTrades(): Trade[] {
       price: Math.round(price * 100) / 100,
       quantity,
       total: Math.round(price * quantity * 100) / 100,
-      status: statuses[Math.floor(Math.random() * statuses.length)],
+      status: statuses[Math.floor(Math.random() * statuses.length)]!,
     })
   }
   return trades

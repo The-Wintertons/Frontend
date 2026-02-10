@@ -30,11 +30,11 @@ const basePrices: Record<string, number> = {
 let interval: ReturnType<typeof setInterval> | null = null
 
 function generateTrade(): Trade {
-  const pair = pairs[Math.floor(Math.random() * pairs.length)]
+  const pair = pairs[Math.floor(Math.random() * pairs.length)]!
   const type: 'Buy' | 'Sell' = Math.random() > 0.5 ? 'Buy' : 'Sell'
   const base = basePrices[pair]
-  const variation = base * (Math.random() * 0.004 - 0.002)
-  const price = base + variation
+  const variation = base! * (Math.random() * 0.004 - 0.002)
+  const price = base! + variation
   const now = new Date()
   const time = now.toLocaleTimeString('en-US', { hour12: false })
 

@@ -72,8 +72,8 @@ function initChart() {
   })
 
   const mockData = generateMockData()
-  const startValue = mockData[0].value
-  const endValue = mockData[mockData.length - 1].value
+  const startValue = mockData[0]!.value
+  const endValue = mockData[mockData.length - 1]!.value
   const isPositive = endValue >= startValue
 
   areaSeries = chart.addSeries(AreaSeries, {
