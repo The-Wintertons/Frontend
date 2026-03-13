@@ -9,7 +9,7 @@ import type {
   HeadlinesResponse
 } from './types/apiTypeDefinitions'
 
-export async function fetchStats(portfolio?: string): Promise<StatsResponse> {
+export async function fetchStats(_portfolio?: string): Promise<StatsResponse> {
   // TODO: replace with `return await (await fetch('/api/stats')).json()`
   return {
     lifetimeReturns: '10%',
@@ -18,7 +18,7 @@ export async function fetchStats(portfolio?: string): Promise<StatsResponse> {
   }
 }
 
-export async function fetchPortfolioChart(portfolio?: string): Promise<PortfolioChartResponse> {
+export async function fetchPortfolioChart(_portfolio?: string): Promise<PortfolioChartResponse> {
   // TODO: replace with `return await (await fetch('/api/portfolio/history')).json()`
   const data = []
   const dayMs = 86400000
@@ -50,8 +50,9 @@ const basePrices: Record<string, number> = {
   'ADA/USDT': 0.62,
 }
 
-export async function fetchRecentTrades(portfolio?: string): Promise<RecentTradesResponse> {
+export async function fetchRecentTrades(_portfolio?: string): Promise<RecentTradesResponse> {
   // TODO: replace with a real API call
+  
   return {
     trades: [
       { time: '10:32:14', pair: 'BTC/USDT', type: 'Buy', price: '$42,183.22' },
@@ -64,7 +65,7 @@ export async function fetchRecentTrades(portfolio?: string): Promise<RecentTrade
   }
 }
 
-export function generateRecentTrade(portfolio?: string): RecentTrade {
+export function generateRecentTrade(_portfolio?: string): RecentTrade {
   const pair = pairs[Math.floor(Math.random() * pairs.length)]!
   const type: 'Buy' | 'Sell' = Math.random() > 0.5 ? 'Buy' : 'Sell'
   const base = basePrices[pair]
@@ -83,7 +84,7 @@ export function generateRecentTrade(portfolio?: string): RecentTrade {
   }
 }
 
-export async function fetchTradeHistory(count: number = 150, timeWindowMs: number = 30 * 24 * 60 * 60 * 1000, portfolio?: string): Promise<TradeHistoryResponse> {
+export async function fetchTradeHistory(count: number = 150, timeWindowMs: number = 30 * 24 * 60 * 60 * 1000, _portfolio?: string): Promise<TradeHistoryResponse> {
   // TODO: replace with `return await (await fetch('/api/trade-history')).json()`
   const now = Date.now()
   const trades = []
@@ -122,7 +123,7 @@ export async function fetchTradeHistory(count: number = 150, timeWindowMs: numbe
   return { trades, totalCount: trades.length }
 }
 
-export async function fetchUptime(portfolio?: string): Promise<UptimeResponse> {
+export async function fetchUptime(_portfolio?: string): Promise<UptimeResponse> {
   // TODO: replace with `return await (await fetch('/api/uptime')).json()`
   const generatedBars = []
   for (let i = 0; i < 30; i++) {
@@ -150,7 +151,7 @@ let cachedIndices: MarketIndicesResponse | null = null;
 let cacheTimestamp = 0;
 const CACHE_DURATION_MS = 60000; // 1 minute
 
-export async function fetchMarketIndices(portfolio?: string): Promise<MarketIndicesResponse> {
+export async function fetchMarketIndices(_portfolio?: string): Promise<MarketIndicesResponse> {
   const now = Date.now();
   
   // Return cached data if we fetched successfully within the last minute to prevent rate limits
