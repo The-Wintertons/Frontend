@@ -70,6 +70,7 @@ function toggleTheme() {
 .sidebar {
   width: 60px;
   min-height: 100vh;
+  min-height: var(--ui-compensated-vh, 100vh);
   background: #2d1b69;
   display: flex;
   flex-direction: column;

@@ -75,8 +75,6 @@ function handleNavigate(page: string) {
     </Teleport>
 
     <main class="main-content">
-      <div class="top-gap" style="margin-top:1%">
-      </div>
       <div class="page-content">
         <div class="page-title-row">
           <div class="title-with-dropdown">
@@ -138,6 +136,7 @@ function handleNavigate(page: string) {
 .app-layout {
   display: flex;
   min-height: 100vh;
+  min-height: var(--ui-compensated-vh, 100vh);
   background: var(--bg-page);
 }
 
@@ -149,7 +148,7 @@ function handleNavigate(page: string) {
 }
 
 .page-content {
-  padding: 0 28px 20px;
+  padding: 20px 28px 20px;
   flex: 1;
   display: flex;
   flex-direction: column;

@@ -98,6 +98,7 @@
 }
 
 :root {
+  --ui-scale-desktop: 0.8;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   line-height: 1.5;
@@ -123,4 +124,16 @@ body {
 
 #app {
   min-height: 100vh;
+}
+
+/* Match the previously designed 80% browser-zoom look at normal 100% zoom. */
+@media (min-width: 1025px) {
+  :root {
+    --ui-compensated-vh: calc(100vh / var(--ui-scale-desktop));
+  }
+
+  #app {
+    zoom: var(--ui-scale-desktop);
+    min-height: var(--ui-compensated-vh);
+  }
 }
