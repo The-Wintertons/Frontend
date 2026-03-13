@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import {
   LayoutDashboard,
   List,
-  Settings,
   User,
+  Moon,
+  Sun,
 } from 'lucide-vue-next'
 
 const emit = defineEmits<{
@@ -14,6 +16,28 @@ const navItems = [
   { icon: LayoutDashboard, name: 'dashboard' },
   { icon: List, name: 'trades' },
 ]
+
+const isDark = ref(true)
+
+onMounted(() => {
+  const saved = localStorage.getItem('theme')
+  if (saved === 'light') {
+    isDark.value = false
+    document.documentElement.setAttribute('data-theme', 'light')
+  }
+  // dark is the default — no attribute needed
+})
+
+function toggleTheme() {
+  isDark.value = !isDark.value
+  if (isDark.value) {
+    document.documentElement.removeAttribute('data-theme')
+    localStorage.setItem('theme', 'dark')
+  } else {
+    document.documentElement.setAttribute('data-theme', 'light')
+    localStorage.setItem('theme', 'light')
+  }
+}
 </script>
 
 <template>
@@ -34,8 +58,9 @@ const navItems = [
       </button>
     </div>
     <div class="sidebar-bottom">
-      <button class="sidebar-btn" title="Settings" @click="emit('navigate', 'settings')">
-        <Settings :size="22" />
+      <button class="sidebar-btn" :title="isDark ? 'Switch to light mode' : 'Switch to dark mode'" @click="toggleTheme">
+        <Sun v-if="isDark" :size="22" />
+        <Moon v-else :size="22" />
       </button>
     </div>
   </aside>

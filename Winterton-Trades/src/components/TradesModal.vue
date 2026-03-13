@@ -1,64 +1,32 @@
 <script setup lang="ts">
+import { ref, onMounted, watch } from 'vue'
 import { X } from 'lucide-vue-next'
+import type { TradeRecord } from '../types/apiTypeDefinitions'
+import { fetchTradeHistory } from '../api'
 
-defineProps<{ visible: boolean }>()
+const props = defineProps<{ visible: boolean; portfolio?: string }>()
 const emit = defineEmits<{ (e: 'close'): void }>()
 
-interface Trade {
-  id: number
-  date: string
-  time: string
-  pair: string
-  type: 'Buy' | 'Sell'
-  price: number
-  quantity: number
-  total: number
-  status: 'Filled' | 'Partial' | 'Cancelled'
-}
+const isLoading = ref(true)
+const trades = ref<TradeRecord[]>([])
 
-const pairs = ['BTC/USDT', 'ETH/USDT', 'SOL/USDT', 'AVAX/USDT', 'DOGE/USDT', 'ADA/USDT']
-const statuses: Trade['status'][] = ['Filled', 'Filled', 'Filled', 'Filled', 'Partial', 'Cancelled']
-const basePrices: Record<string, number> = {
-  'BTC/USDT': 42100,
-  'ETH/USDT': 2320,
-  'SOL/USDT': 112,
-  'AVAX/USDT': 38,
-  'DOGE/USDT': 0.089,
-  'ADA/USDT': 0.62,
-}
-
-function generateTrades(): Trade[] {
-  const trades: Trade[] = []
-  const now = new Date()
-
-  for (let i = 0; i < 50; i++) {
-    const tradeTime = new Date(now.getTime() - i * (60000 * (3 + Math.random() * 30)))
-    const pair = pairs[Math.floor(Math.random() * pairs.length)]!
-    const base = basePrices[pair]!
-    const price = base * (1 + (Math.random() - 0.5) * 0.01)
-    const type: 'Buy' | 'Sell' = Math.random() > 0.45 ? 'Buy' : 'Sell'
-    const quantity = pair.startsWith('BTC')
-      ? +(Math.random() * 0.5 + 0.01).toFixed(4)
-      : pair.startsWith('DOGE') || pair.startsWith('ADA')
-        ? +(Math.random() * 5000 + 100).toFixed(2)
-        : +(Math.random() * 10 + 0.1).toFixed(4)
-
-    trades.push({
-      id: 1000 + i,
-      date: tradeTime.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-      time: tradeTime.toLocaleTimeString('en-US', { hour12: false }),
-      pair,
-      type,
-      price: Math.round(price * 100) / 100,
-      quantity,
-      total: Math.round(price * quantity * 100) / 100,
-      status: statuses[Math.floor(Math.random() * statuses.length)]!,
-    })
+async function loadData() {
+  isLoading.value = true
+  try {
+    const data = await fetchTradeHistory(50, 30 * 24 * 60 * 60 * 1000, props.portfolio)
+    trades.value = data.trades
+  } finally {
+    isLoading.value = false
   }
-  return trades
 }
 
-const trades = generateTrades()
+onMounted(() => {
+  loadData()
+})
+
+watch(() => props.portfolio, () => {
+  loadData()
+})
 
 function formatPrice(val: number): string {
   return val >= 1
@@ -95,6 +63,12 @@ function formatPrice(val: number): string {
                 </tr>
               </thead>
               <tbody>
+                <tr v-if="isLoading" v-for="idx in 8" :key="`skeleton-row-${idx}`" class="skeleton-row">
+                  <td v-for="col in 9" :key="`skeleton-cell-${idx}-${col}`">
+                    <span class="skeleton-cell"></span>
+                  </td>
+                </tr>
+
                 <tr v-for="trade in trades" :key="trade.id">
                   <td class="mono">{{ trade.id }}</td>
                   <td>{{ trade.date }}</td>
@@ -132,14 +106,15 @@ function formatPrice(val: number): string {
 }
 
 .modal-container {
-  background: #fff;
+  background: var(--bg-modal);
   border-radius: 16px;
   width: 90vw;
   max-width: 1100px;
   max-height: 85vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--border-modal);
 }
 
 .modal-header {
@@ -147,14 +122,16 @@ function formatPrice(val: number): string {
   align-items: center;
   justify-content: space-between;
   padding: 20px 28px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-modal);
+  background: var(--bg-modal-header);
+  border-radius: 16px 16px 0 0;
 }
 
 .modal-header h2 {
   margin: 0;
   font-size: 20px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--text-modal-heading);
 }
 
 .close-btn {
@@ -162,8 +139,8 @@ function formatPrice(val: number): string {
   height: 36px;
   border-radius: 50%;
   border: none;
-  background: #f5f5f5;
-  color: #555;
+  background: var(--bg-close-btn);
+  color: var(--text-close-btn);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -172,8 +149,8 @@ function formatPrice(val: number): string {
 }
 
 .close-btn:hover {
-  background: #e0e0e0;
-  color: #1a1a1a;
+  background: var(--bg-close-btn-hover);
+  color: var(--text-primary);
 }
 
 .modal-body {
@@ -190,12 +167,12 @@ function formatPrice(val: number): string {
 .trades-table th {
   position: sticky;
   top: 0;
-  background: #fafafa;
+  background: var(--bg-table-header);
   padding: 12px 16px;
   text-align: left;
   font-weight: 600;
-  color: #555;
-  border-bottom: 1px solid #eee;
+  color: var(--text-table-header);
+  border-bottom: 1px solid var(--border-modal);
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -203,12 +180,12 @@ function formatPrice(val: number): string {
 
 .trades-table td {
   padding: 10px 16px;
-  border-bottom: 1px solid #f5f5f5;
-  color: #333;
+  border-bottom: 1px solid var(--border-table-row);
+  color: var(--text-table-cell);
 }
 
 .trades-table tbody tr:hover {
-  background: #fafafa;
+  background: var(--bg-table-row-hover);
 }
 
 .mono {
@@ -255,6 +232,20 @@ function formatPrice(val: number): string {
   color: #ef5350;
 }
 
+.skeleton-row td {
+  padding: 10px 16px;
+}
+
+.skeleton-cell {
+  display: block;
+  width: 100%;
+  height: 10px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.16) 50%, rgba(255, 255, 255, 0.08) 100%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.3s linear infinite;
+}
+
 /* Transition */
 .modal-enter-active,
 .modal-leave-active {
@@ -269,5 +260,14 @@ function formatPrice(val: number): string {
 .modal-enter-from .modal-container,
 .modal-leave-to .modal-container {
   transform: scale(0.95);
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 </style>

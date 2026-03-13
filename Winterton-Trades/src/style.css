@@ -1,10 +1,109 @@
+/* ── Theme tokens ────────────────────────────────────────────────────── */
+:root {
+  /* Dark (default) */
+  --bg-page: #0e0e1a;
+  --bg-card: #1a1a2e;
+  --bg-card-hover: #252535;
+  --border-card: #333;
+  --text-primary: #eee;
+  --text-secondary: #aaa;
+  --text-muted: #666;
+
+  /* Modal */
+  --bg-modal: #1a1a2e;
+  --bg-modal-header: #0f0f1e;
+  --border-modal: #333;
+  --text-modal: #ddd;
+  --text-modal-heading: #eee;
+  --bg-close-btn: rgba(255,255,255,0.08);
+  --bg-close-btn-hover: rgba(255,255,255,0.15);
+  --text-close-btn: #aaa;
+
+  /* Table */
+  --bg-table-header: #0f0f1e;
+  --border-table-row: #2a2a3e;
+  --text-table-header: #aaa;
+  --text-table-cell: #ddd;
+  --bg-table-row-hover: #252535;
+
+  /* Toggle track */
+  --bg-track: #444;
+
+  /* Chart */
+  --chart-bg: #1a1a2e;
+  --chart-text: #888;
+  --chart-grid: rgba(255,255,255,0.05);
+  --chart-border: rgba(255,255,255,0.08);
+  --chart-time-border: rgba(255,255,255,0.1);
+
+  /* Timeline */
+  --chart-centre: #2a2a3e;
+  --text-label-muted: #555;
+  --legend-divider: #444;
+
+  /* Tooltip */
+  --bg-tooltip: #0f0f1e;
+  --border-tooltip: #444;
+  --text-tooltip-primary: #eee;
+  --text-tooltip-detail: #999;
+  --text-tooltip-time: #666;
+  --tooltip-shadow: rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="light"] {
+  --bg-page: #f5f5f7;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f5f5f7;
+  --border-card: #e0e0e0;
+  --text-primary: #1a1a1a;
+  --text-secondary: #555;
+  --text-muted: #888;
+
+  --bg-modal: #fff;
+  --bg-modal-header: #fff;
+  --border-modal: #eee;
+  --text-modal: #333;
+  --text-modal-heading: #1a1a1a;
+  --bg-close-btn: #f5f5f5;
+  --bg-close-btn-hover: #e0e0e0;
+  --text-close-btn: #555;
+
+  --bg-table-header: #fafafa;
+  --border-table-row: #f5f5f5;
+  --text-table-header: #555;
+  --text-table-cell: #333;
+  --bg-table-row-hover: #fafafa;
+
+  --bg-track: #ddd;
+
+  /* Chart */
+  --chart-bg: #ffffff;
+  --chart-text: #666;
+  --chart-grid: rgba(0,0,0,0.06);
+  --chart-border: rgba(0,0,0,0.08);
+  --chart-time-border: rgba(0,0,0,0.1);
+
+  /* Timeline */
+  --chart-centre: #ddd;
+  --text-label-muted: #999;
+  --legend-divider: #ccc;
+
+  /* Tooltip */
+  --bg-tooltip: #ffffff;
+  --border-tooltip: #ddd;
+  --text-tooltip-primary: #222;
+  --text-tooltip-detail: #666;
+  --text-tooltip-time: #999;
+  --tooltip-shadow: rgba(0, 0, 0, 0.15);
+}
+
 :root {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  color: #1a1a1a;
-  background-color: #f5f5f7;
+  color: var(--text-primary);
+  background-color: var(--bg-page);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

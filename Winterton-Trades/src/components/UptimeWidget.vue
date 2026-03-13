@@ -1,30 +1,15 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
+import type { UptimePeriod } from '../types/apiTypeDefinitions'
+import { fetchUptime } from '../api'
 
-const uptime = ref('100.000%')
-const responseTime = ref('221.22ms')
-const statusBars = ref<{ value: number; color: string }[]>([])
+const props = defineProps<{ portfolio?: string }>()
+
+const isLoading = ref(true)
+const uptime = ref('')
+const responseTime = ref('')
+const statusBars = ref<UptimePeriod[]>([])
 const responsePoints = ref<number[]>([])
-
-function generateStatusBars() {
-  const bars = []
-  for (let i = 0; i < 30; i++) {
-    const value = Math.random() > 0.02 ? 100 : Math.random() * 50 + 50
-    bars.push({
-      value,
-      color: value === 100 ? '#26a69a' : value > 80 ? '#ffc107' : '#ef5350',
-    })
-  }
-  return bars
-}
-
-function generateResponseTimeline() {
-  const points = []
-  for (let i = 0; i < 40; i++) {
-    points.push(150 + Math.random() * 200)
-  }
-  return points
-}
 
 function getResponsePath(): string {
   if (responsePoints.value.length === 0) return ''
@@ -43,19 +28,35 @@ function getResponsePath(): string {
   return `M ${points.join(' L ')}`
 }
 
+async function loadData() {
+  isLoading.value = true
+  try {
+    const data = await fetchUptime(props.portfolio)
+    uptime.value = data.uptimePercent
+    responseTime.value = data.avgResponseTime
+    statusBars.value = data.statusBars
+    responsePoints.value = data.responseTimeline
+  } finally {
+    isLoading.value = false
+  }
+}
+
 let refreshInterval: ReturnType<typeof setInterval> | null = null
 
 onMounted(() => {
-  statusBars.value = generateStatusBars()
-  responsePoints.value = generateResponseTimeline()
+  loadData()
 
-  refreshInterval = setInterval(() => {
-    // Simulate minor response time fluctuation
+  refreshInterval = setInterval(async () => {
+    // TODO: replace with a lightweight polling endpoint, e.g. /api/uptime/latest
     const newTime = 180 + Math.random() * 80
     responseTime.value = `${newTime.toFixed(2)}ms`
     responsePoints.value.push(newTime)
     if (responsePoints.value.length > 40) responsePoints.value.shift()
   }, 5000)
+})
+
+watch(() => props.portfolio, () => {
+  loadData()
 })
 
 onUnmounted(() => {
@@ -67,11 +68,15 @@ onUnmounted(() => {
   <div class="uptime-widget">
     <div class="uptime-header">
       <span class="uptime-indicator">📶</span>
-      <span class="uptime-label">Uptime ({{ uptime }})</span>
+      <span class="uptime-label">Uptime ({{ isLoading ? '--.--%' : uptime }})</span>
       <span class="uptime-period">Last 30 Days ▾</span>
     </div>
 
-    <div class="status-bars">
+    <div v-if="isLoading" class="status-bars status-bars-skeleton">
+      <div v-for="idx in 30" :key="`skeleton-bar-${idx}`" class="status-bar skeleton-block"></div>
+    </div>
+
+    <div v-else class="status-bars">
       <div
         v-for="(bar, idx) in statusBars"
         :key="idx"
@@ -85,20 +90,27 @@ onUnmounted(() => {
       <div class="response-header">
         <span class="response-icon">📈</span>
         <span class="response-label">Response Time</span>
-        <span class="response-value">({{ responseTime }} avg.)</span>
+        <span class="response-value">({{ isLoading ? '--ms' : responseTime }} avg.)</span>
       </div>
-      <p class="response-desc">
+
+      <p v-if="!isLoading" class="response-desc">
         Shows the 'feature' that the monitor started returning a response in ms (and average for the displayed period is {{ responseTime }}).
       </p>
+
+      <div v-else class="response-desc-skeleton">
+        <span class="skeleton-line"></span>
+        <span class="skeleton-line short"></span>
+      </div>
+
       <svg
         class="response-chart"
         viewBox="0 0 280 55"
         preserveAspectRatio="none"
       >
         <path
-          :d="getResponsePath()"
+          :d="isLoading ? 'M 0,35 L 40,30 L 80,34 L 120,25 L 160,28 L 200,18 L 240,23 L 280,16' : getResponsePath()"
           fill="none"
-          stroke="#ffc107"
+          :stroke="isLoading ? '#7d7d7d' : '#ffc107'"
           stroke-width="1.5"
         />
       </svg>
@@ -108,7 +120,7 @@ onUnmounted(() => {
 
 <style scoped>
 .uptime-widget {
-  background: #1a1a2e;
+  background:var(--bg-card);
   border-radius: 12px;
   padding: 14px;
   color: #ccc;
@@ -129,7 +141,7 @@ onUnmounted(() => {
 
 .uptime-label {
   font-weight: 600;
-  color: #fff;
+  color:var(--text-primary);
 }
 
 .uptime-period {
@@ -152,6 +164,10 @@ onUnmounted(() => {
   min-width: 4px;
 }
 
+.status-bars-skeleton .status-bar {
+  opacity: 0.9;
+}
+
 .response-section {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   padding-top: 10px;
@@ -171,7 +187,7 @@ onUnmounted(() => {
 
 .response-label {
   font-weight: 600;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .response-value {
@@ -186,8 +202,44 @@ onUnmounted(() => {
   line-height: 1.4;
 }
 
+.response-desc-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 4px 0 10px;
+}
+
+.skeleton-line {
+  display: block;
+  height: 8px;
+  width: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.16) 50%, rgba(255, 255, 255, 0.08) 100%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.3s linear infinite;
+}
+
+.skeleton-line.short {
+  width: 78%;
+}
+
+.skeleton-block {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.16) 50%, rgba(255, 255, 255, 0.08) 100%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.3s linear infinite;
+}
+
 .response-chart {
   width: 100%;
   height: 50px;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 </style>
