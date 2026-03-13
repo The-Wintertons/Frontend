@@ -100,21 +100,21 @@ defineExpose({ collapse })
 .iris-switch-wrap {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
   user-select: none;
 }
 
 .iris-label {
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 700;
   letter-spacing: 0.6px;
   color: #888;
-  width: 22px;
+  width: 1.375rem;
   text-align: right;
 }
 
 .iris-hint {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: #aaa;
   white-space: nowrap;
 }
@@ -135,12 +135,12 @@ defineExpose({ collapse })
 .iris-track {
   position: relative;
   display: inline-block;
-  width: 44px;
-  height: 24px;
+  width: 2.75rem;
+  height: 1.5rem;
   background: var(--bg-track);
-  border-radius: 12px;
+  border-radius: 0.75rem;
   transition: background 0.3s;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.15);
+  box-shadow: inset 0 1px 0.1875rem rgba(0,0,0,0.15);
 }
 
 .iris-switch--on .iris-track {
@@ -149,18 +149,18 @@ defineExpose({ collapse })
 
 .iris-thumb {
   position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 18px;
-  height: 18px;
+  top: 0.1875rem;
+  left: 0.1875rem;
+  width: 1.125rem;
+  height: 1.125rem;
   border-radius: 50%;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  box-shadow: 0 1px 0.25rem rgba(0,0,0,0.25);
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .iris-switch--on .iris-thumb {
-  transform: translateX(20px);
+  transform: translateX(1.25rem);
   background: #4fc3f7;
 }
 </style>

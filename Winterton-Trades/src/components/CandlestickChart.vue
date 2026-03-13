@@ -224,15 +224,15 @@ watch(
 <style scoped>
 .chart-wrapper {
   background: var(--chart-bg);
-  border-radius: 12px;
+  border-radius: 0.75rem;
   overflow: hidden;
   border: 1px solid var(--chart-border);
   display: flex;
-  flex-direction: column;
+  flex-direction: column; flex: 1.75; min-height: 0;
 }
 
 .chart-header {
-  padding: 18px 24px 12px;
+  padding: 1.125rem 1.5rem 0.75rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -240,7 +240,7 @@ watch(
 
 .chart-title {
   margin: 0;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 600;
   color: var(--text-primary);
   text-transform: uppercase;
@@ -249,14 +249,14 @@ watch(
 
 .chart-container {
   width: 100%;
-  height: 480px;
+  flex: 1; min-height: 0; display: flex;
   flex: 1;
 }
 
 .chart-shell {
   position: relative;
   width: 100%;
-  height: 480px;
+  flex: 1; min-height: 0; display: flex;
 }
 
 .chart-container-hidden {
@@ -278,7 +278,7 @@ watch(
   background-image:
     linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-  background-size: 56px 56px;
+  background-size: 3.5rem 3.5rem;
 }
 
 .skeleton-line {
@@ -286,7 +286,7 @@ watch(
   left: 0;
   right: 0;
   top: 48%;
-  height: 2px;
+  height: 0.125rem;
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0.18) 100%);
   background-size: 200% 100%;
   animation: skeleton-shimmer 1.2s linear infinite;

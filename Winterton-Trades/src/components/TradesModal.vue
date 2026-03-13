@@ -102,18 +102,18 @@ function formatPrice(val: number): string {
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(0.25rem);
 }
 
 .modal-container {
   background: var(--bg-modal);
-  border-radius: 16px;
+  border-radius: 1rem;
   width: 90vw;
-  max-width: 1100px;
+  max-width: 68.75rem;
   max-height: 85vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 1.5rem 5rem rgba(0, 0, 0, 0.5);
   border: 1px solid var(--border-modal);
 }
 
@@ -121,22 +121,22 @@ function formatPrice(val: number): string {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 28px;
+  padding: 1.25rem 1.75rem;
   border-bottom: 1px solid var(--border-modal);
   background: var(--bg-modal-header);
-  border-radius: 16px 16px 0 0;
+  border-radius: 1rem 1rem 0 0;
 }
 
 .modal-header h2 {
   margin: 0;
-  font-size: 20px;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--text-modal-heading);
 }
 
 .close-btn {
-  width: 36px;
-  height: 36px;
+  width: 2.25rem;
+  height: 2.25rem;
   border-radius: 50%;
   border: none;
   background: var(--bg-close-btn);
@@ -161,25 +161,25 @@ function formatPrice(val: number): string {
 .trades-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 .trades-table th {
   position: sticky;
   top: 0;
   background: var(--bg-table-header);
-  padding: 12px 16px;
+  padding: 0.75rem 1rem;
   text-align: left;
   font-weight: 600;
   color: var(--text-table-header);
   border-bottom: 1px solid var(--border-modal);
-  font-size: 11px;
+  font-size: 0.6875rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .trades-table td {
-  padding: 10px 16px;
+  padding: 0.625rem 1rem;
   border-bottom: 1px solid var(--border-table-row);
   color: var(--text-table-cell);
 }
@@ -190,7 +190,7 @@ function formatPrice(val: number): string {
 
 .mono {
   font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 
 .pair {
@@ -209,9 +209,9 @@ function formatPrice(val: number): string {
 
 .status-badge {
   display: inline-block;
-  padding: 3px 10px;
-  border-radius: 12px;
-  font-size: 11px;
+  padding: 0.1875rem 0.625rem;
+  border-radius: 0.75rem;
+  font-size: 0.6875rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.3px;
@@ -233,14 +233,14 @@ function formatPrice(val: number): string {
 }
 
 .skeleton-row td {
-  padding: 10px 16px;
+  padding: 0.625rem 1rem;
 }
 
 .skeleton-cell {
   display: block;
   width: 100%;
-  height: 10px;
-  border-radius: 8px;
+  height: 0.625rem;
+  border-radius: 0.5rem;
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.16) 50%, rgba(255, 255, 255, 0.08) 100%);
   background-size: 200% 100%;
   animation: skeleton-shimmer 1.3s linear infinite;

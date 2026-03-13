@@ -86,15 +86,15 @@ onUnmounted(() => { if (rafId !== null) cancelAnimationFrame(rafId) })
 
 .exit-btn {
   position: absolute;
-  top: 24px;
-  right: 28px;
+  top: 1.5rem;
+  right: 1.75rem;
   z-index: 201;
   background: rgba(255, 255, 255, 0.08);
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.18);
-  padding: 8px 18px;
-  border-radius: 8px;
-  font-size: 13px;
+  padding: 0.5rem 1.125rem;
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
   cursor: pointer;
   transition: background 0.2s;
 }

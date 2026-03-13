@@ -72,8 +72,8 @@ onUnmounted(() => {
 <style scoped>
 .trades-panel {
   background: var(--bg-card);
-  border-radius: 12px;
-  overflow: hidden;
+  border-radius: 0.75rem;
+  overflow-y: auto;
   border: 1px solid var(--border-card);
   display: flex;
   flex-direction: column;
@@ -84,23 +84,23 @@ onUnmounted(() => {
 .trades-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 .trades-table th {
   background: var(--bg-table-header);
-  padding: 12px 16px;
+  padding: 0.75rem 1rem;
   text-align: left;
   font-weight: 600;
   color: var(--text-table-header);
   border-bottom: 1px solid var(--border-card);
-  font-size: 12px;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .trades-table td {
-  padding: 14px 16px;
+  padding: 0.875rem 1rem;
   border-bottom: 1px solid var(--border-table-row);
   color: var(--text-table-cell);
 }
@@ -120,14 +120,14 @@ onUnmounted(() => {
 }
 
 .skeleton-row td {
-  padding: 14px 16px;
+  padding: 0.875rem 1rem;
 }
 
 .skeleton-cell {
   display: block;
   width: 100%;
-  height: 10px;
-  border-radius: 8px;
+  height: 0.625rem;
+  border-radius: 0.5rem;
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.16) 50%, rgba(255, 255, 255, 0.08) 100%);
   background-size: 200% 100%;
   animation: skeleton-shimmer 1.3s linear infinite;

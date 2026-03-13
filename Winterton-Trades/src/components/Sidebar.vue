@@ -68,15 +68,15 @@ function toggleTheme() {
 
 <style scoped>
 .sidebar {
-  width: 60px;
-  min-height: 100vh;
-  min-height: var(--ui-compensated-vh, 100vh);
+  width: 3.75rem;
+  height: 100vh;
+  height: 100vh;
   background: #2d1b69;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 0;
+  padding: 1rem 0;
 }
 
 .sidebar-top,
@@ -84,13 +84,13 @@ function toggleTheme() {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 .sidebar-btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.75rem;
   border: none;
   background: transparent;
   color: rgba(255, 255, 255, 0.6);
@@ -112,7 +112,7 @@ function toggleTheme() {
 }
 
 .avatar-btn {
-  margin-bottom: 12px;
+  margin-bottom: 0.75rem;
   background: rgba(255, 255, 255, 0.08);
 }
 </style>

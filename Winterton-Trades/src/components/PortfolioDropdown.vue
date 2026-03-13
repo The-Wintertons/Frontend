@@ -38,14 +38,14 @@ function handleChange(event: Event) {
 .portfolio-dropdown::after {
   content: '';
   position: absolute;
-  right: 14px;
+  right: 0.875rem;
   top: 50%;
   transform: translateY(-50%);
   width: 0;
   height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 5px solid var(--text-muted);
+  border-left: 0.3125rem solid transparent;
+  border-right: 0.3125rem solid transparent;
+  border-top: 0.3125rem solid var(--text-muted);
   pointer-events: none;
 }
 
@@ -54,10 +54,10 @@ function handleChange(event: Event) {
 }
 
 .dropdown-select {
-  padding: 8px 36px 8px 16px;
-  font-size: 15px;
+  padding: 0.5rem 2.25rem 0.5rem 1rem;
+  font-size: 0.9375rem;
   font-weight: 600;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   background-color: var(--bg-card);
   color: var(--text-primary);
   border: 1px solid var(--border-card);
@@ -65,7 +65,7 @@ function handleChange(event: Event) {
   cursor: pointer;
   outline: none;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.15);
 }
 
 .dropdown-select:hover {
@@ -75,13 +75,13 @@ function handleChange(event: Event) {
 
 .dropdown-select:focus {
   border-color: var(--text-primary);
-  box-shadow: 0 0 0 2px rgba(100, 100, 100, 0.2);
+  box-shadow: 0 0 0 0.125rem rgba(100, 100, 100, 0.2);
 }
 
 .dropdown-skeleton {
-  width: 210px;
-  height: 41px;
-  border-radius: 8px;
+  width: 13.125rem;
+  height: 2.5625rem;
+  border-radius: 0.5rem;
   border: 1px solid var(--border-card);
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.16) 50%, rgba(255, 255, 255, 0.08) 100%);
   background-size: 200% 100%;

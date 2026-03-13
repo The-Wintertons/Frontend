@@ -102,8 +102,8 @@ function formatPercent(val: number): string {
 <style scoped>
 .market-indices {
   background: var(--bg-card);
-  border-radius: 12px;
-  padding: 14px 16px;
+  border-radius: 0.75rem;
+  padding: 0.875rem 1rem;
   color: #ccc;
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -111,12 +111,12 @@ function formatPercent(val: number): string {
 .indices-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .indices-title {
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   color: var(--text-primary);
   text-transform: uppercase;
@@ -126,15 +126,15 @@ function formatPercent(val: number): string {
 .indices-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 .index-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 10px;
-  border-radius: 8px;
+  padding: 0.5rem 0.625rem;
+  border-radius: 0.5rem;
   background: rgba(255, 255, 255, 0.03);
   transition: background 0.15s ease;
 }
@@ -154,14 +154,14 @@ function formatPercent(val: number): string {
 }
 
 .index-symbol {
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: 0.3px;
 }
 
 .index-name {
-  font-size: 11px;
+  font-size: 0.6875rem;
   color: var(--text-muted);
 }
 
@@ -173,21 +173,21 @@ function formatPercent(val: number): string {
 }
 
 .index-value {
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 600;
   color: var(--text-primary);
   font-variant-numeric: tabular-nums;
 }
 
 .index-change {
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
 
 .change-arrow {
-  font-size: 9px;
-  margin-right: 2px;
+  font-size: 0.5625rem;
+  margin-right: 0.125rem;
 }
 
 .positive {
@@ -200,29 +200,29 @@ function formatPercent(val: number): string {
 
 .skeleton-line {
   display: block;
-  height: 8px;
-  border-radius: 6px;
+  height: 0.5rem;
+  border-radius: 0.375rem;
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.16) 50%, rgba(255, 255, 255, 0.08) 100%);
   background-size: 200% 100%;
   animation: skeleton-shimmer 1.3s linear infinite;
 }
 
 .skeleton-line.symbol {
-  width: 64px;
-  margin-bottom: 4px;
+  width: 4rem;
+  margin-bottom: 0.25rem;
 }
 
 .skeleton-line.name {
-  width: 110px;
+  width: 6.875rem;
 }
 
 .skeleton-line.value {
-  width: 78px;
-  margin-bottom: 4px;
+  width: 4.875rem;
+  margin-bottom: 0.25rem;
 }
 
 .skeleton-line.change {
-  width: 98px;
+  width: 6.125rem;
 }
 
 @keyframes skeleton-shimmer {

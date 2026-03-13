@@ -77,8 +77,8 @@ function formatTime(timestamp: number): string {
 <style scoped>
 .top-headlines {
   background: var(--bg-card);
-  border-radius: 12px;
-  padding: 14px 16px;
+  border-radius: 0.75rem;
+  padding: 0.875rem 1rem;
   color: #ccc;
   border: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
@@ -89,12 +89,12 @@ function formatTime(timestamp: number): string {
 .headlines-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .headlines-title {
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   color: var(--text-primary);
   text-transform: uppercase;
@@ -104,7 +104,7 @@ function formatTime(timestamp: number): string {
 .headlines-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0.5rem;
   flex: 1;
   overflow-y: auto;
 }
@@ -112,9 +112,9 @@ function formatTime(timestamp: number): string {
 .headline-item {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 8px 10px;
-  border-radius: 8px;
+  gap: 0.25rem;
+  padding: 0.5rem 0.625rem;
+  border-radius: 0.5rem;
   background: rgba(255, 255, 255, 0.03);
   text-decoration: none;
   color: inherit;
@@ -130,7 +130,7 @@ function formatTime(timestamp: number): string {
 }
 
 .headline-title {
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   color: var(--text-primary);
   line-height: 1.3;
@@ -144,8 +144,8 @@ function formatTime(timestamp: number): string {
 .headline-meta {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 11px;
+  gap: 0.375rem;
+  font-size: 0.6875rem;
   color: var(--text-muted);
 }
 
@@ -154,7 +154,7 @@ function formatTime(timestamp: number): string {
 }
 
 .dot {
-  font-size: 10px;
+  font-size: 0.625rem;
   opacity: 0.5;
 }
 
@@ -163,14 +163,14 @@ function formatTime(timestamp: number): string {
   align-items: center;
   justify-content: center;
   flex: 1;
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--text-muted);
 }
 
 .skeleton-line {
   display: block;
-  height: 8px;
-  border-radius: 6px;
+  height: 0.5rem;
+  border-radius: 0.375rem;
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.16) 50%, rgba(255, 255, 255, 0.08) 100%);
   background-size: 200% 100%;
   animation: skeleton-shimmer 1.3s linear infinite;
@@ -185,7 +185,7 @@ function formatTime(timestamp: number): string {
 }
 
 .skeleton-line.meta {
-  margin-top: 2px;
+  margin-top: 0.125rem;
   width: 45%;
 }
 

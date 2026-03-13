@@ -121,8 +121,8 @@ onUnmounted(() => {
 <style scoped>
 .uptime-widget {
   background:var(--bg-card);
-  border-radius: 12px;
-  padding: 14px;
+  border-radius: 0.75rem;
+  padding: 0.875rem;
   color: #ccc;
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -130,13 +130,13 @@ onUnmounted(() => {
 .uptime-header {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-bottom: 10px;
-  font-size: 13px;
+  gap: 0.375rem;
+  margin-bottom: 0.625rem;
+  font-size: 0.8125rem;
 }
 
 .uptime-indicator {
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 
 .uptime-label {
@@ -146,22 +146,22 @@ onUnmounted(() => {
 
 .uptime-period {
   margin-left: auto;
-  font-size: 11px;
+  font-size: 0.6875rem;
   color: #888;
   cursor: pointer;
 }
 
 .status-bars {
   display: flex;
-  gap: 2px;
-  margin-bottom: 14px;
+  gap: 0.125rem;
+  margin-bottom: 0.875rem;
 }
 
 .status-bar {
   flex: 1;
-  height: 24px;
-  border-radius: 2px;
-  min-width: 4px;
+  height: 1.5rem;
+  border-radius: 0.125rem;
+  min-width: 0.25rem;
 }
 
 .status-bars-skeleton .status-bar {
@@ -170,19 +170,19 @@ onUnmounted(() => {
 
 .response-section {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding-top: 10px;
+  padding-top: 0.625rem;
 }
 
 .response-header {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  margin-bottom: 4px;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  margin-bottom: 0.25rem;
 }
 
 .response-icon {
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 
 .response-label {
@@ -192,28 +192,28 @@ onUnmounted(() => {
 
 .response-value {
   color: #ffc107;
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 
 .response-desc {
-  font-size: 10px;
+  font-size: 0.625rem;
   color: #666;
-  margin: 2px 0 8px;
+  margin: 0.125rem 0 0.5rem;
   line-height: 1.4;
 }
 
 .response-desc-skeleton {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin: 4px 0 10px;
+  gap: 0.375rem;
+  margin: 0.25rem 0 0.625rem;
 }
 
 .skeleton-line {
   display: block;
-  height: 8px;
+  height: 0.5rem;
   width: 100%;
-  border-radius: 6px;
+  border-radius: 0.375rem;
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.16) 50%, rgba(255, 255, 255, 0.08) 100%);
   background-size: 200% 100%;
   animation: skeleton-shimmer 1.3s linear infinite;
@@ -231,7 +231,7 @@ onUnmounted(() => {
 
 .response-chart {
   width: 100%;
-  height: 50px;
+  height: 3.125rem;
 }
 
 @keyframes skeleton-shimmer {

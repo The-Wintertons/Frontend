@@ -135,8 +135,8 @@ function handleNavigate(page: string) {
 <style scoped>
 .app-layout {
   display: flex;
-  min-height: 100vh;
-  min-height: var(--ui-compensated-vh, 100vh);
+  height: 100vh;
+  height: 100vh;
   background: var(--bg-page);
 }
 
@@ -144,18 +144,18 @@ function handleNavigate(page: string) {
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
+  overflow-x: hidden; overflow-y: auto; min-height: 0;
 }
 
 .page-content {
-  padding: 20px 28px 20px;
-  flex: 1;
+  padding: 1.25rem 1.75rem 1.25rem;
+  flex: 1; min-height: 0;
   display: flex;
   flex-direction: column;
 }
 
 .page-title {
-  font-size: 28px;
+  font-size: 1.75rem;
   font-weight: 700;
   color: var(--text-primary);
   margin: 0;
@@ -164,21 +164,21 @@ function handleNavigate(page: string) {
 .title-with-dropdown {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 1rem;
 }
 
 .page-title-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem;
 }
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: 1fr 420px;
-  gap: 20px;
-  margin-bottom: 20px;
+  grid-template-columns: 1fr 18%;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
   flex: 1;
   align-items: stretch;
   min-height: 0;
@@ -186,7 +186,7 @@ function handleNavigate(page: string) {
 
 .chart-area {
   min-width: 0;
-  min-height: 480px;
+  min-height: 0; flex: 1;
   display: flex;
   flex-direction: column;
 }
@@ -194,22 +194,22 @@ function handleNavigate(page: string) {
 .right-panel {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1rem;
   min-height: 0;
 }
 
 .bottom-widgets {
   display: grid;
-  grid-template-columns: 320px 1fr 420px;
-  gap: 20px;
-  margin-bottom: 20px;
+  grid-template-columns: 1.25fr 3.75fr 18%;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
   align-items: stretch;
 }
 
 .bottom-right-col {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1rem;
 }
 
 @media (max-width: 1024px) {
@@ -223,16 +223,16 @@ function handleNavigate(page: string) {
 
 .launch-badge {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
+  bottom: 1.5rem;
+  right: 1.5rem;
   background: var(--bg-card);
   border: 1px solid var(--border-card);
-  border-radius: 30px;
-  padding: 12px;
+  border-radius: 1.875rem;
+  padding: 0.75rem;
   display: flex;
   align-items: center;
   gap: 0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.15);
   cursor: default;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   z-index: 1000;
@@ -240,18 +240,18 @@ function handleNavigate(page: string) {
 }
 
 .launch-badge:hover {
-  gap: 12px;
+  gap: 0.75rem;
 }
 
 .launch-badge .clock-icon {
-  font-size: 24px;
+  font-size: 1.5rem;
   line-height: 1;
 }
 
 .launch-badge-content {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 0.75rem;
   max-width: 0;
   opacity: 0;
   overflow: hidden;
@@ -259,13 +259,13 @@ function handleNavigate(page: string) {
 }
 
 .launch-badge:hover .launch-badge-content {
-  max-width: 400px;
+  max-width: 25rem;
   opacity: 1;
-  padding-right: 8px;
+  padding-right: 0.5rem;
 }
 
 .countdown-label {
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 600;
   color: var(--text-secondary);
   text-transform: uppercase;
@@ -274,25 +274,25 @@ function handleNavigate(page: string) {
 
 .countdown-segments {
   display: flex;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 .countdown-segment {
   display: flex;
   align-items: baseline;
-  gap: 2px;
+  gap: 0.125rem;
   min-width: unset;
 }
 
 .countdown-value {
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--text-secondary);
   font-variant-numeric: tabular-nums;
 }
 
 .countdown-unit {
-  font-size: 11px;
+  font-size: 0.6875rem;
   color: #666;
   text-transform: lowercase;
 }

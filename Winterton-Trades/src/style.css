@@ -118,22 +118,15 @@
 }
 
 body {
+  overflow: hidden;
   margin: 0;
-  min-height: 100vh;
+  height: 100vh;
 }
 
 #app {
-  min-height: 100vh;
+  height: 100vh;
 }
 
-/* Match the previously designed 80% browser-zoom look at normal 100% zoom. */
-@media (min-width: 1025px) {
-  :root {
-    --ui-compensated-vh: calc(100vh / var(--ui-scale-desktop));
-  }
-
-  #app {
-    zoom: var(--ui-scale-desktop);
-    min-height: var(--ui-compensated-vh);
-  }
+html {
+  font-size: clamp(10px, min(0.8vw, 1vh) + 0.1rem, 16px);
 }

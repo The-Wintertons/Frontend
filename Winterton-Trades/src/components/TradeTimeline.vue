@@ -446,10 +446,10 @@ onUnmounted(() => clearInterval(refreshTimer))
 .timeline-panel {
   background: var(--bg-card);
   border: 1px solid var(--border-card);
-  border-radius: 12px;
-  padding: 18px 24px 12px;
-  margin-top: 16px;
-  flex: 1;
+  border-radius: 0.75rem;
+  padding: 1.125rem 1.5rem 0.75rem;
+  margin-top: 1rem;
+  flex: 0.85;
   min-height: 0;
   display: flex;
   flex-direction: column;
@@ -460,12 +460,12 @@ onUnmounted(() => clearInterval(refreshTimer))
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 0.75rem;
 }
 
 .timeline-title {
   margin: 0;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 600;
   color: var(--text-primary);
   text-transform: uppercase;
@@ -474,7 +474,7 @@ onUnmounted(() => clearInterval(refreshTimer))
 
 .timeline-legend {
   display: flex;
-  gap: 12px;
+  gap: 0.75rem;
   align-items: center;
   flex-wrap: wrap;
 }
@@ -482,15 +482,15 @@ onUnmounted(() => clearInterval(refreshTimer))
 .legend-item {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  font-size: 11px;
+  gap: 0.3125rem;
+  font-size: 0.6875rem;
   color: var(--text-muted);
 }
 
 .legend-swatch {
-  width: 10px;
-  height: 10px;
-  border-radius: 2px;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 0.125rem;
 }
 
 .legend-buy { background: #26a69a; }
@@ -498,13 +498,13 @@ onUnmounted(() => clearInterval(refreshTimer))
 
 .legend-divider {
   width: 1px;
-  height: 12px;
+  height: 0.75rem;
   background: var(--legend-divider);
 }
 
 .timeline-body {
   width: 100%;
-  max-width: calc(100% - 12px);
+  max-width: calc(100% - 0.75rem);
   margin: 0 auto;
   flex: 1;
   display: flex;
@@ -527,13 +527,13 @@ onUnmounted(() => clearInterval(refreshTimer))
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0.625rem;
 }
 
 .skeleton-header-line {
   width: 40%;
-  height: 10px;
-  border-radius: 8px;
+  height: 0.625rem;
+  border-radius: 0.5rem;
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.16) 50%, rgba(255, 255, 255, 0.08) 100%);
   background-size: 200% 100%;
   animation: skeleton-shimmer 1.3s linear infinite;
@@ -541,8 +541,8 @@ onUnmounted(() => clearInterval(refreshTimer))
 
 .skeleton-chart-block {
   width: 100%;
-  height: 130px;
-  border-radius: 8px;
+  height: 8.125rem;
+  border-radius: 0.5rem;
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.16) 50%, rgba(255, 255, 255, 0.08) 100%);
   background-size: 200% 100%;
   animation: skeleton-shimmer 1.3s linear infinite;
@@ -551,13 +551,13 @@ onUnmounted(() => clearInterval(refreshTimer))
 .skeleton-axis-row {
   display: flex;
   justify-content: space-between;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 .skeleton-axis-tick {
   flex: 1;
-  height: 8px;
-  border-radius: 6px;
+  height: 0.5rem;
+  border-radius: 0.375rem;
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.16) 50%, rgba(255, 255, 255, 0.08) 100%);
   background-size: 200% 100%;
   animation: skeleton-shimmer 1.3s linear infinite;
@@ -574,13 +574,13 @@ onUnmounted(() => clearInterval(refreshTimer))
 
 .chart-half {
   position: relative;
-  height: 64px;
+  height: 4rem;
 }
 
 .half-label {
   position: absolute;
-  left: -2px;
-  font-size: 9px;
+  left: -0.125rem;
+  font-size: 0.5625rem;
   font-weight: 700;
   letter-spacing: 0.5px;
   color: var(--text-label-muted);
@@ -588,8 +588,8 @@ onUnmounted(() => clearInterval(refreshTimer))
   z-index: 2;
 }
 
-.chart-buy .half-label { bottom: 2px; }
-.chart-sell .half-label { top: 2px; }
+.chart-buy .half-label { bottom: 0.125rem; }
+.chart-sell .half-label { top: 0.125rem; }
 
 .chart-centre {
   height: 1px;
@@ -600,7 +600,7 @@ onUnmounted(() => clearInterval(refreshTimer))
 /* ── Bars ────────────────────────────────────────────────────────────── */
 .bar-slot {
   position: absolute;
-  width: 6px;
+  width: 0.375rem;
   transform: translateX(-50%);
   cursor: pointer;
 }
@@ -623,9 +623,9 @@ onUnmounted(() => clearInterval(refreshTimer))
 
 .bar {
   width: 100%;
-  border-radius: 2px;
+  border-radius: 0.125rem;
   transition: opacity 0.15s, filter 0.15s;
-  min-height: 3px;
+  min-height: 0.1875rem;
 }
 
 .bar-buy {
@@ -648,47 +648,47 @@ onUnmounted(() => clearInterval(refreshTimer))
   transform: translateX(-50%);
   background: var(--bg-tooltip);
   border: 1px solid var(--border-tooltip);
-  border-radius: 8px;
-  padding: 8px 12px;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
   white-space: nowrap;
   pointer-events: none;
   z-index: 20;
-  box-shadow: 0 4px 20px var(--tooltip-shadow);
+  box-shadow: 0 0.25rem 1.25rem var(--tooltip-shadow);
 }
 
 .bar-tooltip--above {
-  bottom: calc(100% + 8px);
+  bottom: calc(100% + 0.5rem);
 }
 
 .bar-tooltip--below {
-  top: calc(100% + 8px);
+  top: calc(100% + 0.5rem);
 }
 
 .tip-pair {
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--text-tooltip-primary);
   line-height: 1.5;
 }
 
-.tip-type { font-size: 11px; font-weight: 600; line-height: 1.5; }
+.tip-type { font-size: 0.6875rem; font-weight: 600; line-height: 1.5; }
 .buy-text { color: #26a69a; }
 .sell-text { color: #ef5350; }
 
 .tip-price {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--text-table-cell);
   line-height: 1.5;
 }
 
 .tip-detail {
-  font-size: 11px;
+  font-size: 0.6875rem;
   color: var(--text-tooltip-detail);
   line-height: 1.5;
 }
 
 .tip-time {
-  font-size: 10px;
+  font-size: 0.625rem;
   color: var(--text-tooltip-time);
   line-height: 1.5;
 }
@@ -703,15 +703,15 @@ onUnmounted(() => clearInterval(refreshTimer))
 /* ── X-axis ──────────────────────────────────────────────────────────── */
 .time-axis {
   position: relative;
-  height: 20px;
-  margin-top: 6px;
+  height: 1.25rem;
+  margin-top: 0.375rem;
   width: 100%;
 }
 
 .axis-tick {
   position: absolute;
   transform: translateX(-50%);
-  font-size: 10px;
+  font-size: 0.625rem;
   color: var(--text-muted);
   font-variant-numeric: tabular-nums;
 }
@@ -725,8 +725,8 @@ onUnmounted(() => clearInterval(refreshTimer))
 }
 
 .timeline-hint {
-  margin-top: 6px;
-  font-size: 10px;
+  margin-top: 0.375rem;
+  font-size: 0.625rem;
   color: var(--text-muted);
   text-align: right;
 }

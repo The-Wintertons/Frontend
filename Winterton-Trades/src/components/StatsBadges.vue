@@ -50,23 +50,23 @@ watch(() => props.portfolio, () => {
 <style scoped>
 .stats-row {
   display: flex;
-  gap: 12px;
+  gap: 0.75rem;
   flex-wrap: wrap;
 }
 
 .stat-badge {
   background: var(--bg-card);
   border: 1px solid var(--border-card);
-  border-radius: 24px;
-  padding: 8px 20px;
-  font-size: 14px;
+  border-radius: 1.5rem;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.875rem;
   color: var(--text-secondary);
   font-weight: 500;
   white-space: nowrap;
 }
 
 .stat-badge-skeleton {
-  min-width: 180px;
+  min-width: 11.25rem;
   display: inline-flex;
   align-items: center;
 }
@@ -74,8 +74,8 @@ watch(() => props.portfolio, () => {
 .skeleton-line {
   display: block;
   width: 100%;
-  height: 10px;
-  border-radius: 8px;
+  height: 0.625rem;
+  border-radius: 0.5rem;
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.16) 50%, rgba(255, 255, 255, 0.08) 100%);
   background-size: 200% 100%;
   animation: skeleton-shimmer 1.3s linear infinite;
