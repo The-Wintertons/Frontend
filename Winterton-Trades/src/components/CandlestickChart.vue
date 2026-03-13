@@ -3,6 +3,10 @@ import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { createChart, type IChartApi, type ISeriesApi, AreaSeries, ColorType } from 'lightweight-charts'
 import { fetchPortfolioChart } from '../api'
 
+// Adjustable parameter to bring the start/end dates inward (in milliseconds)
+// e.g. 1 day = 24 * 60 * 60 * 1000
+const RANGE_PADDING_MS = 24 * 60 * 60 * 1000
+
 type SyncedRange = {
   start: number
   end: number
@@ -45,8 +49,11 @@ function toDateKey(timestamp: number): string {
 
 function applySyncedRange(range: SyncedRange): void {
   if (!chart || !latestDataRange) return
-  const clampedStart = Math.max(range.start, latestDataRange.start)
+  
+  // Apply our local padding to move the start and end dates inwards
+  const clampedStart = Math.max(range.start, latestDataRange.start) + RANGE_PADDING_MS
   const clampedEnd = Math.min(range.end, latestDataRange.end)
+  
   if (clampedEnd <= clampedStart) return
 
   chart.timeScale().setVisibleRange({
@@ -111,6 +118,7 @@ async function initChart() {
     layout: {
       background: { type: ColorType.Solid, color: colors.bg },
       textColor: colors.text,
+      attributionLogo: false,
     },
     grid: {
       vertLines: { color: colors.gridColor },
@@ -169,6 +177,7 @@ onMounted(async () => {
       layout: {
         background: { type: ColorType.Solid, color: colors.bg },
         textColor: colors.text,
+        attributionLogo: false,
       },
       grid: {
         vertLines: { color: colors.gridColor },
