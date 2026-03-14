@@ -253,6 +253,26 @@ function onWheelZoom(event: WheelEvent): void {
   setView(nextStart, nextEnd)
 }
 
+function zoom(factor: number): void {
+  const start = viewStart.value
+  const end = viewEnd.value
+  const currentSpan = end - start
+  const fullSpan = maxWindowMs.value
+  if (currentSpan <= 0 || fullSpan <= 0) return
+
+  const nextSpan = Math.min(fullSpan, Math.max(minWindowMs.value, currentSpan * factor))
+  const center = start + currentSpan / 2
+  setView(center - nextSpan / 2, center + nextSpan / 2)
+}
+
+function zoomIn(): void {
+  zoom(0.7)
+}
+
+function zoomOut(): void {
+  zoom(1.4)
+}
+
 function onPanStart(event: PointerEvent): void {
   if (event.button !== 0) return
   isPanning.value = true
@@ -311,18 +331,29 @@ onUnmounted(() => clearInterval(refreshTimer))
     <!-- Header -->
     <div class="timeline-header">
       <h3 class="timeline-title">Trade Timeline</h3>
-      <div class="timeline-legend">
-        <span v-for="lp in legendPairs" :key="lp.pair" class="legend-item">
-          <span class="legend-swatch" :style="{ background: lp.color }" />
-          {{ lp.pair }}
-        </span>
-        <span class="legend-divider" />
-        <span class="legend-item">
-          <span class="legend-swatch legend-buy" /> Buy
-        </span>
-        <span class="legend-item">
-          <span class="legend-swatch legend-sell" /> Sell
-        </span>
+      <div class="timeline-header-right">
+        <div class="timeline-legend">
+          <span v-for="lp in legendPairs" :key="lp.pair" class="legend-item">
+            <span class="legend-swatch" :style="{ background: lp.color }" />
+            {{ lp.pair }}
+          </span>
+          <span class="legend-divider" />
+          <span class="legend-item">
+            <span class="legend-swatch legend-buy" /> Buy
+          </span>
+          <span class="legend-item">
+            <span class="legend-swatch legend-sell" /> Sell
+          </span>
+        </div>
+        <span class="legend-divider d-mobile-none" />
+        <div class="zoom-controls">
+          <button @click="zoomIn" class="zoom-btn" aria-label="Zoom In" title="Zoom In">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+          </button>
+          <button @click="zoomOut" class="zoom-btn" aria-label="Zoom Out" title="Zoom Out">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -461,6 +492,8 @@ onUnmounted(() => clearInterval(refreshTimer))
   align-items: center;
   justify-content: space-between;
   margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .timeline-title {
@@ -472,11 +505,50 @@ onUnmounted(() => clearInterval(refreshTimer))
   letter-spacing: 0.4px;
 }
 
+.timeline-header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.zoom-btn {
+  background: transparent;
+  border: 1px solid var(--border-card);
+  color: var(--text-muted);
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.zoom-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  border-color: var(--text-muted);
+}
+
 .timeline-legend {
   display: flex;
   gap: 0.75rem;
   align-items: center;
   flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  .d-mobile-none {
+    display: none;
+  }
 }
 
 .legend-item {
