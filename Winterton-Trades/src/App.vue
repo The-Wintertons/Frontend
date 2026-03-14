@@ -213,11 +213,35 @@ function handleNavigate(page: string) {
 }
 
 @media (max-width: 1024px) {
-  .dashboard-grid {
-    grid-template-columns: 1fr;
+  .page-content {
+    padding: 1rem;
   }
+  
+  .page-title-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .title-with-dropdown {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .dashboard-grid {
+    display: flex;
+    flex-direction: column;
+    flex: none;
+  }
+
+  .chart-area {
+    min-height: 600px;
+    flex: none;
+  }
+
   .bottom-widgets {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
   }
 }
 
