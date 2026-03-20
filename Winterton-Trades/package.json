@@ -11,12 +11,14 @@
   "dependencies": {
     "@tresjs/cientos": "^5.6.0",
     "@tresjs/core": "^5.7.0",
+    "d3-delaunay": "^6.0.4",
     "lightweight-charts": "^5.1.0",
     "lucide-vue-next": "^0.563.0",
     "three": "^0.183.2",
     "vue": "^3.5.24"
   },
   "devDependencies": {
+    "@types/d3-delaunay": "^6.0.4",
     "@types/node": "^24.10.1",
     "@vitejs/plugin-vue": "^6.0.1",
     "@vue/tsconfig": "^0.8.1",
