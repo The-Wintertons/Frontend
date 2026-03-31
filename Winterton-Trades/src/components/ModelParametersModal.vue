@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onUnmounted } from 'vue'
+import { ref, computed } from 'vue'
 import { X, Save, AlertCircle } from 'lucide-vue-next'
 import { updateModelParameters } from '../api'
 
