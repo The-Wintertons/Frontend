@@ -2,7 +2,7 @@
 import { TresCanvas } from '@tresjs/core'
 import { GLTFModel, Html, Stars } from '@tresjs/cientos'
 import { ref, watch, onMounted, onUnmounted } from 'vue'
-import { BufferGeometry, Float32BufferAttribute, MeshBasicMaterial, PointsMaterial, Uint32BufferAttribute } from 'three'
+import { BufferGeometry, Float32BufferAttribute, MeshBasicMaterial, PointsMaterial, Uint32BufferAttribute, ShaderMaterial, AdditiveBlending } from 'three'
 import { Delaunay } from 'd3-delaunay'
 import logoPath from '../assets/Logo.glb?url'
 
@@ -19,8 +19,9 @@ const buttonRotation = ref<[number, number, number]>([-0.15, 0, 0])
 let rafId: number | null = null
 
 const waveMeshGeometry = ref<BufferGeometry | null>(null)
+const waveProxyGeometry = ref<BufferGeometry | null>(null)
 const wavePointsGeometry = ref<BufferGeometry | null>(null)
-const waveMeshMaterial = ref<MeshBasicMaterial | null>(null)
+const waveMeshMaterial = ref<ShaderMaterial | null>(null)
 const wavePointsMaterial = ref<PointsMaterial | null>(null)
 const waveSolidMaterial = ref<MeshBasicMaterial | null>(null)
 
@@ -36,11 +37,30 @@ const WAVE_FREQ_Z = 0.24
 
 let waveStartTime = 0
 let waveBasePositions: Float32Array | null = null
+let wavePhases: Float32Array | null = null
 let wavePositionAttribute: Float32BufferAttribute | null = null
+let waveColorAttribute: Float32BufferAttribute | null = null
+let hasActiveRipplesLastFrame = false
+
+const ripples: { x: number; z: number; startTime: number }[] = []
+
+function onWaveClick(e: any) {
+  if (e && e.object && e.point) {
+     const localPoint = e.object.worldToLocal(e.point.clone())
+     ripples.push({
+       x: localPoint.x,
+       z: localPoint.z,
+       startTime: performance.now() * 0.001
+     })
+  }
+}
 
 function initializeWaveField() {
   const totalPoints = GRID_COLUMNS * GRID_ROWS
   const positions = new Float32Array(totalPoints * 3)
+  const colors = new Float32Array(totalPoints * 3)
+  wavePhases = new Float32Array(totalPoints * 4)
+  
   const pointsForTriangulation: Array<[number, number]> = new Array(totalPoints)
   let i = 0
   for (let row = 0; row < GRID_ROWS; row += 1) {
@@ -53,6 +73,16 @@ function initializeWaveField() {
       positions[i * 3] = x
       positions[i * 3 + 1] = GRID_BASE_Y + 2 * rowT
       positions[i * 3 + 2] = z
+      
+      wavePhases[i * 4] = x * WAVE_FREQ_X + z * WAVE_FREQ_Z
+      wavePhases[i * 4 + 1] = x * WAVE_FREQ_X * 2.1 - z * WAVE_FREQ_Z * 1.8
+      wavePhases[i * 4 + 2] = x * WAVE_FREQ_X * -3.8 + z * WAVE_FREQ_Z * 4.2
+      wavePhases[i * 4 + 3] = x * WAVE_FREQ_X * 7.5 + z * WAVE_FREQ_Z * -7.1
+      
+      colors[i * 3] = 1.0
+      colors[i * 3 + 1] = 1.0
+      colors[i * 3 + 2] = 1.0
+      
       pointsForTriangulation[i] = [x, z]
       i += 1
     }
@@ -62,21 +92,72 @@ function initializeWaveField() {
 
   const meshGeometry = new BufferGeometry()
   wavePositionAttribute = new Float32BufferAttribute(positions, 3)
+  waveColorAttribute = new Float32BufferAttribute(colors, 3)
+  
   meshGeometry.setAttribute('position', wavePositionAttribute)
+  meshGeometry.setAttribute('color', waveColorAttribute)
   meshGeometry.setIndex(new Uint32BufferAttribute(triangulation.triangles, 1))
 
   // Points reuse the same position attribute so the wave update is single-pass.
   const pointsGeometry = new BufferGeometry()
   pointsGeometry.setAttribute('position', wavePositionAttribute)
+  pointsGeometry.setAttribute('color', waveColorAttribute)
 
   waveBasePositions = positions.slice()
   waveMeshGeometry.value = meshGeometry
+  
+  // Fast low-poly proxy for raycasting hits
+  const proxyGeom = new BufferGeometry()
+  const proxyPositions = new Float32Array([
+    // Far edge (Row 0, Z=-1)
+    -GRID_WIDTH / 2, GRID_BASE_Y, -1,
+     GRID_WIDTH / 2, GRID_BASE_Y, -1,
+    // Near edge (Row MAX, Z=19)
+    -GRID_WIDTH / 2, GRID_BASE_Y + 2, 19,
+     GRID_WIDTH / 2, GRID_BASE_Y + 2, 19
+  ])
+  const proxyIndices = new Uint32BufferAttribute([
+    0, 2, 1,  // CCW winding to face UP
+    2, 3, 1
+  ], 1)
+  proxyGeom.setAttribute('position', new Float32BufferAttribute(proxyPositions, 3))
+  proxyGeom.setIndex(proxyIndices)
+  proxyGeom.computeBoundingSphere()
+  waveProxyGeometry.value = proxyGeom
+
   wavePointsGeometry.value = pointsGeometry
-  waveMeshMaterial.value = new MeshBasicMaterial({
-    color: '#ffffff',
+  waveMeshMaterial.value = new ShaderMaterial({
+    vertexShader: `
+      varying vec3 vColor;
+      void main() {
+        vColor = color;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      varying vec3 vColor;
+      void main() {
+        // Measure how far the vertex color is from base white
+        float diff = distance(vColor, vec3(1.0));
+        
+        // Map distance to a 0.0 - 1.0 intensity mask so we know where ripples are
+        float intensity = smoothstep(0.0, 0.35, diff);
+        
+        // Base grid is faint (0.15), but bumps to full solid (1.0) on ripples
+        float alpha = 0.15 + (intensity * 0.85);
+        
+        // Boost color saturation slightly to make it pop, without blowing out channels to white
+        float bloomFactor = 1.0 + (intensity * 0.4);
+        vec3 finalColor = vColor * bloomFactor;
+        
+        gl_FragColor = vec4(finalColor, alpha);
+      }
+    `,
     wireframe: true,
     transparent: true,
-    opacity: 1,
+    blending: AdditiveBlending,
+    depthWrite: false, // Prevents Z-fighting in additive mode
+    vertexColors: true,
   })
   wavePointsMaterial.value = new PointsMaterial({
     color: '#ffffff',
@@ -84,6 +165,7 @@ function initializeWaveField() {
     transparent: true,
     opacity: 0.85,
     sizeAttenuation: true,
+    vertexColors: true,
   })
   waveSolidMaterial.value = new MeshBasicMaterial({
     color: '#020204',
@@ -94,9 +176,10 @@ function initializeWaveField() {
 }
 
 function updateWaveField(elapsedSeconds: number) {
-  if (!wavePositionAttribute || !waveBasePositions) return
+  if (!wavePositionAttribute || !waveBasePositions || !wavePhases || !waveColorAttribute) return
 
   const positionArray = wavePositionAttribute.array as Float32Array
+  const colorArray = waveColorAttribute.array as Float32Array
   const totalPoints = GRID_COLUMNS * GRID_ROWS
   
   // CPU Math Optimization: Pre-calculate time components outside the massive vertex loop
@@ -108,32 +191,113 @@ function updateWaveField(elapsedSeconds: number) {
   const amp2 = WAVE_AMPLITUDE * 0.5
   const amp3 = WAVE_AMPLITUDE * 0.25
   const amp4 = WAVE_AMPLITUDE * 0.125
+  
+  const currentSeconds = performance.now() * 0.001
+
+  // Clean old ripples
+  for (let i = ripples.length - 1; i >= 0; i--) {
+      if (currentSeconds - ripples[i].startTime > 6.0) {
+          ripples.splice(i, 1)
+      }
+  }
+
+  // Pre-calculate ripple properties for this frame
+  const activeRipples = ripples.map(r => {
+      const t = currentSeconds - r.startTime
+      return {
+          x: r.x,
+          z: r.z,
+          t: t,
+          waveRadius: t * 6.0,
+          fade: Math.max(0, 1.0 - (t / 6.0))
+      }
+  })
+
+  const hasRipples = activeRipples.length > 0;
+  const updateColor = hasRipples || hasActiveRipplesLastFrame;
+  hasActiveRipplesLastFrame = hasRipples;
 
   for (let i = 0; i < totalPoints; i += 1) {
     const idx = i * 3
+    const phaseIdx = i * 4
     const baseX = waveBasePositions[idx] ?? 0
     const baseY = waveBasePositions[idx + 1] ?? GRID_BASE_Y
     const baseZ = waveBasePositions[idx + 2] ?? 0
 
-    // Approximate Fractal Brownian Motion (fBm) using 4 sine octaves
-    let noise = 0
-    
-    // Octave 1: Base wave
-    noise += Math.sin(baseX * WAVE_FREQ_X + baseZ * WAVE_FREQ_Z + t1) * amp1
-    
-    // Octave 2: Higher frequency, lower amplitude, shifted phase direction
-    noise += Math.sin(baseX * WAVE_FREQ_X * 2.1 - baseZ * WAVE_FREQ_Z * 1.8 + t2) * amp2
-    
-    // Octave 3: Even higher frequency, twisted angle
-    noise += Math.sin(baseX * WAVE_FREQ_X * -3.8 + baseZ * WAVE_FREQ_Z * 4.2 + t3) * amp3
-    
-    // Octave 4: Fine details
-    noise += Math.sin(baseX * WAVE_FREQ_X * 7.5 + baseZ * WAVE_FREQ_Z * -7.1 + t4) * amp4
+    // Approximate Fractal Brownian Motion (fBm) using precomputed phases and 4 sine octaves
+    let noise = Math.sin(wavePhases[phaseIdx] + t1) * amp1
+              + Math.sin(wavePhases[phaseIdx + 1] + t2) * amp2
+              + Math.sin(wavePhases[phaseIdx + 2] + t3) * amp3
+              + Math.sin(wavePhases[phaseIdx + 3] + t4) * amp4
+
+    if (updateColor) {
+      // Default white color
+      let r = 1, g = 1, b = 1
+
+      for (let rIdx = 0; rIdx < activeRipples.length; rIdx++) {
+        const ripple = activeRipples[rIdx]
+        
+        const dx = baseX - ripple.x
+        const dz = baseZ - ripple.z
+        // Use squared distance for quick bounding check
+        const sqDist = dx * dx + dz * dz
+        
+        const RIPPLE_WIDTH = 1.8
+        const maxD = ripple.waveRadius + RIPPLE_WIDTH
+        
+        // Only compute sqrt and colors if within the expanding circle
+        if (sqDist <= maxD * maxD) {
+          const dist = Math.sqrt(sqDist)
+          
+          let colorIntensity = 0
+          if (dist < ripple.waveRadius) {
+             // Inside the wave ring: full color intensity
+             colorIntensity = 1.0
+          } else {
+             // Leading edge fade
+             colorIntensity = 1.0 - ((dist - ripple.waveRadius) / RIPPLE_WIDTH)
+          }
+          
+          // Overall fade for the ripple over time
+          const finalColorIntensity = colorIntensity * ripple.fade
+          
+          if (finalColorIntensity > 0) {
+              const angle = Math.atan2(dz, dx)
+              // Rainbow based on angle and radial distance
+              const hue = angle + dist * 0.5 - ripple.t * 2.0
+              
+              const rawR = Math.sin(hue) * 0.5 + 0.5
+              const rawG = Math.sin(hue + 2.094) * 0.5 + 0.5
+              const rawB = Math.sin(hue + 4.188) * 0.5 + 0.5
+ 
+              // Add physical ripple to Y position ONLY around the wave edge
+              const distFromWave = Math.abs(dist - ripple.waveRadius)
+              if (distFromWave < RIPPLE_WIDTH) {
+                 const bumpIntensity = 1.0 - (distFromWave / RIPPLE_WIDTH)
+                 const bump = Math.cos(distFromWave / RIPPLE_WIDTH * Math.PI * 0.5) * 0.6 * bumpIntensity * ripple.fade
+                 noise += bump
+              }
+ 
+              // Blend color towards rainbow
+              r = r * (1 - finalColorIntensity) + rawR * finalColorIntensity
+              g = g * (1 - finalColorIntensity) + rawG * finalColorIntensity
+              b = b * (1 - finalColorIntensity) + rawB * finalColorIntensity
+          }
+        }
+      }
+      
+      colorArray[idx] = r
+      colorArray[idx + 1] = g
+      colorArray[idx + 2] = b
+    }
 
     positionArray[idx + 1] = baseY + noise
   }
 
   wavePositionAttribute.needsUpdate = true
+  if (updateColor) {
+    waveColorAttribute.needsUpdate = true
+  }
 }
 
 function animate() {
@@ -176,6 +340,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   waveMeshGeometry.value?.dispose()
+  waveProxyGeometry.value?.dispose()
   wavePointsGeometry.value?.dispose()
   waveMeshMaterial.value?.dispose()
   wavePointsMaterial.value?.dispose()
@@ -207,6 +372,15 @@ onUnmounted(() => {
 
       <!-- Delaunay-triangulated animated wave background -->
       <TresGroup :position="[0, -2.25, -9.9]" >
+        <!-- Invisible hit plane for fast raycasting -->
+        <TresMesh
+          v-if="waveProxyGeometry"
+          :geometry="waveProxyGeometry"
+          @click="onWaveClick"
+        >
+          <TresMeshBasicMaterial :transparent="true" :opacity="0" :depth-write="false" />
+        </TresMesh>
+
         <!-- Solid background to occlude the stars -->
         <TresMesh
           v-if="waveMeshGeometry && waveSolidMaterial"
