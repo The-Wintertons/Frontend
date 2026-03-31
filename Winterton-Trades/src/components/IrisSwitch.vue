@@ -4,9 +4,9 @@ import { ref } from 'vue'
 const emit = defineEmits<{ (e: 'enter'): void }>()
 
 /** Whether the switch is in the ON position */
-const isOn = ref(false)
+const isOn = ref(true)
 /** Animating the iris in (expand) or out (shrink) */
-const phase = ref<'idle' | 'expanding' | 'done' | 'collapsing'>('idle')
+const phase = ref<'idle' | 'expanding' | 'done' | 'collapsing'>('done')
 
 /** CSS custom-property values updated just before the animation runs */
 const irisX = ref('50%')
@@ -65,19 +65,18 @@ defineExpose({ collapse })
 <template>
   <!-- The switch itself -->
   <div class="iris-switch-wrap" ref="switchEl">
-    <span class="iris-label">{{ isOn ? 'ON' : 'OFF' }}</span>
+    <span class="iris-hint">Home</span>
     <button
       class="iris-switch"
       :class="{ 'iris-switch--on': isOn, 'iris-switch--disabled': phase !== 'idle' && phase !== 'done' }"
       :aria-pressed="isOn"
       @click="flip"
-      title="Toggle 3D view"
+      title="Home"
     >
       <span class="iris-track">
         <span class="iris-thumb" />
       </span>
     </button>
-    <span class="iris-hint">3D View</span>
   </div>
 
   <!-- Full-screen iris overlay (Teleported to avoid stacking context issues) -->

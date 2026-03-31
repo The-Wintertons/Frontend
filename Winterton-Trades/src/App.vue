@@ -6,6 +6,7 @@ import RecentTrades from './components/RecentTrades.vue'
 import StatsBadges from './components/StatsBadges.vue'
 import UptimeWidget from './components/UptimeWidget.vue'
 import TradesModal from './components/TradesModal.vue'
+import ModelParametersModal from './components/ModelParametersModal.vue'
 import IrisSwitch from './components/IrisSwitch.vue'
 import TradeTimeline from './components/TradeTimeline.vue'
 import MarketIndices from './components/MarketIndices.vue'
@@ -20,11 +21,12 @@ type SyncedRange = {
 }
 
 const showTradesModal = ref(false)
+const showSettingsModal = ref(false)
 const syncedRange = ref<SyncedRange | null>(null)
 const selectedPortfolio = ref('Main Portfolio')
 
 /** Whether the TresJS scene is mounted on top of the dashboard */
-const showScene = ref(false)
+const showScene = ref(true)
 const irisSwitchRef = ref<InstanceType<typeof IrisSwitch> | null>(null)
 
 /** Iris wipe has finished expanding — now mount the scene */
@@ -60,6 +62,8 @@ const countdown = computed(() => {
 function handleNavigate(page: string) {
   if (page === 'trades') {
     showTradesModal.value = true
+  } else if (page === 'settings') {
+    showSettingsModal.value = true
   }
 }
 </script>
@@ -68,6 +72,7 @@ function handleNavigate(page: string) {
   <div class="app-layout">
     <Sidebar @navigate="handleNavigate" />
     <TradesModal :visible="showTradesModal" :portfolio="selectedPortfolio" @close="showTradesModal = false" />
+    <ModelParametersModal :visible="showSettingsModal" @close="showSettingsModal = false" />
 
     <!-- TresJS scene mounts over everything once the iris is fully expanded -->
     <Teleport to="body">

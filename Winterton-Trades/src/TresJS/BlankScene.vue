@@ -171,6 +171,7 @@ onUnmounted(() => { if (rafId !== null) cancelAnimationFrame(rafId) })
 
 onMounted(() => {
   initializeWaveField()
+  if (props.visible && rafId === null) animate()
 })
 
 onUnmounted(() => {
@@ -184,9 +185,6 @@ onUnmounted(() => {
 
 <template>
   <div class="tres-wrapper" :class="{ 'tres-wrapper--hidden': !visible }">
-    <!-- Exit button — visible once the scene is shown -->
-    <button class="exit-btn" @click="emit('exit')">✕ Exit</button>
-
     <TresCanvas clear-color="#020204" window-size>
       <TresFog :args="['#020204', 16, 120]" />
 
@@ -266,25 +264,6 @@ onUnmounted(() => {
   visibility: hidden;
   pointer-events: none;
   opacity: 0;
-}
-
-.exit-btn {
-  position: absolute;
-  top: 1.5rem;
-  right: 1.75rem;
-  z-index: 201;
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  padding: 0.5rem 1.125rem;
-  border-radius: 0.5rem;
-  font-size: 0.8125rem;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.exit-btn:hover {
-  background: rgba(255, 255, 255, 0.18);
 }
 
 .start-label {

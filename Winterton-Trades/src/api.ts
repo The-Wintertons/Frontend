@@ -263,3 +263,14 @@ export async function fetchTopHeadlines(): Promise<HeadlinesResponse> {
     return cachedHeadlines || fallbackData;
   }
 }
+
+export async function updateModelParameters(params: any): Promise<{ success: boolean; message: string }> {
+  // TODO: replace with a real API call like:
+  // return await (await fetch('/api/model-parameters', { method: 'POST', body: JSON.stringify(params) })).json()
+  console.log('Dummy API updating model parameters:', params)
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve({ success: true, message: 'Model parameters updated successfully' })
+    }, 500)
+  })
+}

@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import {
   LayoutDashboard,
   List,
+  Settings,
   User,
   Moon,
   Sun,
@@ -15,6 +16,7 @@ const emit = defineEmits<{
 const navItems = [
   { icon: LayoutDashboard, name: 'dashboard' },
   { icon: List, name: 'trades' },
+  { icon: Settings, name: 'settings' },
 ]
 
 const isDark = ref(true)
