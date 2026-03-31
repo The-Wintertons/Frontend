@@ -196,20 +196,24 @@ function updateWaveField(elapsedSeconds: number) {
 
   // Clean old ripples
   for (let i = ripples.length - 1; i >= 0; i--) {
-      if (currentSeconds - ripples[i].startTime > 6.0) {
+      // @ts-ignore
+      if (currentSeconds - ripples[i]!.startTime > 9.0) {
           ripples.splice(i, 1)
       }
   }
 
   // Pre-calculate ripple properties for this frame
   const activeRipples = ripples.map(r => {
-      const t = currentSeconds - r.startTime
+      // @ts-ignore
+      const t = currentSeconds - r!.startTime
       return {
-          x: r.x,
-          z: r.z,
+          // @ts-ignore
+          x: r!.x,
+          // @ts-ignore
+          z: r!.z,
           t: t,
           waveRadius: t * 6.0,
-          fade: Math.max(0, 1.0 - (t / 6.0))
+          fade: Math.max(0, 1.0 - (t / 9.0))
       }
   })
 
@@ -225,17 +229,17 @@ function updateWaveField(elapsedSeconds: number) {
     const baseZ = waveBasePositions[idx + 2] ?? 0
 
     // Approximate Fractal Brownian Motion (fBm) using precomputed phases and 4 sine octaves
-    let noise = Math.sin(wavePhases[phaseIdx] + t1) * amp1
-              + Math.sin(wavePhases[phaseIdx + 1] + t2) * amp2
-              + Math.sin(wavePhases[phaseIdx + 2] + t3) * amp3
-              + Math.sin(wavePhases[phaseIdx + 3] + t4) * amp4
+    let noise = Math.sin(wavePhases[phaseIdx]! + t1) * amp1
+              + Math.sin(wavePhases[phaseIdx + 1]! + t2) * amp2
+              + Math.sin(wavePhases[phaseIdx + 2]! + t3) * amp3
+              + Math.sin(wavePhases[phaseIdx + 3]! + t4) * amp4
 
     if (updateColor) {
       // Default white color
       let r = 1, g = 1, b = 1
 
       for (let rIdx = 0; rIdx < activeRipples.length; rIdx++) {
-        const ripple = activeRipples[rIdx]
+        const ripple = activeRipples[rIdx]!
         
         const dx = baseX - ripple.x
         const dz = baseZ - ripple.z
