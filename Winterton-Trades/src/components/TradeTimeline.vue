@@ -182,18 +182,21 @@ function barHeight(trade: TradeRecord): number {
   return Math.max(pct, 8) // minimum 8% so tiny trades are still visible
 }
 
-// Pair colours
-const pairColours: Record<string, string> = {
-  'BTC/USDT': '#f7931a',
-  'ETH/USDT': '#627eea',
-  'SOL/USDT': '#00ffa3',
-  'AVAX/USDT': '#e84142',
-  'DOGE/USDT': '#c2a633',
-  'ADA/USDT': '#0033ad',
+function hashString(input: string): number {
+  let hash = 0
+  for (let i = 0; i < input.length; i += 1) {
+    hash = (hash << 5) - hash + input.charCodeAt(i)
+    hash |= 0
+  }
+  return hash >>> 0
 }
 
 function barColor(pair: string): string {
-  return pairColours[pair] ?? '#888'
+  const hash = hashString(pair)
+  const hue = hash % 360
+  const saturation = 68
+  const lightness = 56
+  return `hsl(${hue} ${saturation}% ${lightness}%)`
 }
 
 function isNegativeTrade(trade: TradeRecord): boolean {
