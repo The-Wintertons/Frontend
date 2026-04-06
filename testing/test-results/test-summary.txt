@@ -1,0 +1,73 @@
+TESTING PLAN ASSIGNMENT
+Due: 4/10/2026 @ 11:59 PM
+
+Testing framework used: Vitest with Vue Test Utils.
+
+Total items: 54
+Passed: 54
+Failed: 0
+Team member: Tom
+
+Group | Testing Type | Function/Task | Test Scenario | Team Member | Comment/Issues | Finished
+| Countdown Timer | Unit |  |  |  |  |  |
+|  | Unit | Calculate Countdown | clamp to zero when target is in the past | Tom |  | X |
+|  | Unit | Calculate Countdown | display correct days | Tom |  | X |
+|  | Unit | Calculate Countdown | display correct hours, minutes, seconds | Tom |  | X |
+|  | Unit | Update Timer | update every second | Tom |  | X |
+|  | Unit | Cleanup Timer | clear timer on unmount | Tom |  | X |
+| Data Display | Unit |  |  |  |  |  |
+|  | Unit | Render Chart | render with valid market data | Tom |  | X |
+|  | Unit | Handle Synced Range | sync to parent range selection | Tom |  | X |
+|  | Unit | Display Trades | show latest transactions | Tom |  | X |
+|  | Unit | Empty State | show message when no trades available | Tom |  | X |
+|  | Unit | Display Metrics | show correct values | Tom |  | X |
+|  | Unit | Update Metrics | update on portfolio change | Tom |  | X |
+| Integration | Integration |  |  |  |  |  |
+|  | Integration | handleNavigate | open TradesModal when navigating to trades | Tom |  | X |
+|  | Integration | handleNavigate | not open TradesModal for non-trades pages | Tom |  | X |
+|  | Integration | handleNavigate | open ModelParametersModal when navigating to settings | Tom |  | X |
+|  | Integration | handleNavigate | not open ModelParametersModal for non-settings pages | Tom |  | X |
+|  | Integration | handleSceneSelect | update dashboard when API source selected | Tom |  | X |
+|  | Integration | Portfolio Selection | update when portfolio changes | Tom |  | X |
+|  | Integration | API Error Handling | handle connection failures | Tom |  | X |
+|  | Integration | Data Loading | show loading states during fetch | Tom |  | X |
+| Iris Switch | Unit |  |  |  |  |  |
+|  | Unit | flip | toggle from OFF to ON position | Tom |  | X |
+|  | Unit | getSwitchOrigin | calculate switch origin coordinates correctly | Tom |  | X |
+|  | Unit | collapse | transition from done to collapsing phase | Tom |  | X |
+|  | Unit | onOverlayTransitionEnd | emit enter event when expanding phase ends | Tom |  | X |
+|  | Unit | onOverlayTransitionEnd | return to idle when collapsing phase ends | Tom |  | X |
+|  | Unit | onOverlayTransitionEnd | not change phase when idle | Tom |  | X |
+|  | Unit | flip Prevention | not allow flip during animation phase | Tom |  | X |
+| Modals | Unit |  |  |  |  |  |
+|  | Unit | Show/Hide Modal | display when visible prop is true | Tom |  | X |
+|  | Unit | Show/Hide Modal | hide when visible prop is false | Tom |  | X |
+|  | Unit | Close Modal | emit close event | Tom |  | X |
+|  | Unit | Close Modal | not emit close event until close action occurs | Tom |  | X |
+|  | Unit | Show/Hide Modal | display when visible prop is true | Tom |  | X |
+|  | Unit | Close Modal | emit close event | Tom |  | X |
+|  | Unit | Close Modal | not emit close event when no action is triggered | Tom |  | X |
+| Portfolio Dropdown | Unit |  |  |  |  |  |
+|  | Unit | handleChange | select mean_reversion portfolio and update model | Tom |  | X |
+|  | Unit | handleChange | select mlmc_strategy portfolio and update model | Tom |  | X |
+|  | Unit | handleChange | not emit before user changes selection | Tom |  | X |
+|  | Unit | Display Loading State | show skeleton when loading | Tom |  | X |
+|  | Unit | Display Loading State | show dropdown when not loading | Tom |  | X |
+|  | Unit | Display Loading State | switch from loading to ready state | Tom |  | X |
+| Sidebar | Unit |  |  |  |  |  |
+|  | Unit | Navigate to Dashboard | emit navigate event with dashboard | Tom |  | X |
+|  | Unit | Navigate to Trades | emit navigate event with trades | Tom |  | X |
+|  | Unit | Navigate to Settings | emit navigate event with settings | Tom |  | X |
+|  | Unit | toggleTheme | switch from dark to light | Tom |  | X |
+|  | Unit | toggleTheme | switch from light to dark | Tom |  | X |
+|  | Unit | Load Theme on Mount | load dark theme by default | Tom |  | X |
+|  | Unit | Load Theme on Mount | keep dark when saved theme is dark | Tom |  | X |
+|  | Unit | Load Theme on Mount | persist light theme from localStorage | Tom |  | X |
+|  | Unit | Load Theme on Mount | ignore unknown theme values | Tom |  | X |
+| Usability | Usability |  |  |  |  |  |
+|  | Usability | Navigation Experience | enable seamless navigation | Tom |  | X |
+|  | Usability | Navigation Experience | reject unknown routes and keep current page | Tom |  | X |
+|  | Usability | Theme Switching | persist theme across reloads | Tom |  | X |
+|  | Usability | Theme Switching | restore light mode when saved theme is light | Tom |  | X |
+|  | Usability | Responsive Design | support all screen sizes | Tom |  | X |
+|  | Usability | Accessibility | have proper ARIA labels | Tom |  | X |

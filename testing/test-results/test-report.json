@@ -1,0 +1,647 @@
+{
+  "title": "Testing Plan Assignment",
+  "dueDate": "4/10/2026 @ 11:59 PM",
+  "testingFrameworkNote": "Testing framework used: Vitest with Vue Test Utils.",
+  "teamMember": "Tom",
+  "summary": {
+    "totalTests": 54,
+    "passedTests": 54,
+    "failedTests": 0
+  },
+  "rows": [
+    {
+      "kind": "group",
+      "group": "Countdown Timer",
+      "testingType": "Unit"
+    },
+    {
+      "kind": "test",
+      "group": "Countdown Timer",
+      "testingType": "Unit",
+      "functionTask": "Calculate Countdown",
+      "testScenario": "clamp to zero when target is in the past",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Countdown Timer",
+      "testingType": "Unit",
+      "functionTask": "Calculate Countdown",
+      "testScenario": "display correct days",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Countdown Timer",
+      "testingType": "Unit",
+      "functionTask": "Calculate Countdown",
+      "testScenario": "display correct hours, minutes, seconds",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Countdown Timer",
+      "testingType": "Unit",
+      "functionTask": "Update Timer",
+      "testScenario": "update every second",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Countdown Timer",
+      "testingType": "Unit",
+      "functionTask": "Cleanup Timer",
+      "testScenario": "clear timer on unmount",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "group",
+      "group": "Data Display",
+      "testingType": "Unit"
+    },
+    {
+      "kind": "test",
+      "group": "Data Display",
+      "testingType": "Unit",
+      "functionTask": "Render Chart",
+      "testScenario": "render with valid market data",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Data Display",
+      "testingType": "Unit",
+      "functionTask": "Handle Synced Range",
+      "testScenario": "sync to parent range selection",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Data Display",
+      "testingType": "Unit",
+      "functionTask": "Display Trades",
+      "testScenario": "show latest transactions",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Data Display",
+      "testingType": "Unit",
+      "functionTask": "Empty State",
+      "testScenario": "show message when no trades available",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Data Display",
+      "testingType": "Unit",
+      "functionTask": "Display Metrics",
+      "testScenario": "show correct values",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Data Display",
+      "testingType": "Unit",
+      "functionTask": "Update Metrics",
+      "testScenario": "update on portfolio change",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "group",
+      "group": "Integration",
+      "testingType": "Integration"
+    },
+    {
+      "kind": "test",
+      "group": "Integration",
+      "testingType": "Integration",
+      "functionTask": "handleNavigate",
+      "testScenario": "open TradesModal when navigating to trades",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Integration",
+      "testingType": "Integration",
+      "functionTask": "handleNavigate",
+      "testScenario": "not open TradesModal for non-trades pages",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Integration",
+      "testingType": "Integration",
+      "functionTask": "handleNavigate",
+      "testScenario": "open ModelParametersModal when navigating to settings",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Integration",
+      "testingType": "Integration",
+      "functionTask": "handleNavigate",
+      "testScenario": "not open ModelParametersModal for non-settings pages",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Integration",
+      "testingType": "Integration",
+      "functionTask": "handleSceneSelect",
+      "testScenario": "update dashboard when API source selected",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Integration",
+      "testingType": "Integration",
+      "functionTask": "Portfolio Selection",
+      "testScenario": "update when portfolio changes",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Integration",
+      "testingType": "Integration",
+      "functionTask": "API Error Handling",
+      "testScenario": "handle connection failures",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Integration",
+      "testingType": "Integration",
+      "functionTask": "Data Loading",
+      "testScenario": "show loading states during fetch",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "group",
+      "group": "Iris Switch",
+      "testingType": "Unit"
+    },
+    {
+      "kind": "test",
+      "group": "Iris Switch",
+      "testingType": "Unit",
+      "functionTask": "flip",
+      "testScenario": "toggle from OFF to ON position",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Iris Switch",
+      "testingType": "Unit",
+      "functionTask": "getSwitchOrigin",
+      "testScenario": "calculate switch origin coordinates correctly",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Iris Switch",
+      "testingType": "Unit",
+      "functionTask": "collapse",
+      "testScenario": "transition from done to collapsing phase",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Iris Switch",
+      "testingType": "Unit",
+      "functionTask": "onOverlayTransitionEnd",
+      "testScenario": "emit enter event when expanding phase ends",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Iris Switch",
+      "testingType": "Unit",
+      "functionTask": "onOverlayTransitionEnd",
+      "testScenario": "return to idle when collapsing phase ends",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Iris Switch",
+      "testingType": "Unit",
+      "functionTask": "onOverlayTransitionEnd",
+      "testScenario": "not change phase when idle",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Iris Switch",
+      "testingType": "Unit",
+      "functionTask": "flip Prevention",
+      "testScenario": "not allow flip during animation phase",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "group",
+      "group": "Modals",
+      "testingType": "Unit"
+    },
+    {
+      "kind": "test",
+      "group": "Modals",
+      "testingType": "Unit",
+      "functionTask": "Show/Hide Modal",
+      "testScenario": "display when visible prop is true",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Modals",
+      "testingType": "Unit",
+      "functionTask": "Show/Hide Modal",
+      "testScenario": "hide when visible prop is false",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Modals",
+      "testingType": "Unit",
+      "functionTask": "Close Modal",
+      "testScenario": "emit close event",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Modals",
+      "testingType": "Unit",
+      "functionTask": "Close Modal",
+      "testScenario": "not emit close event until close action occurs",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Modals",
+      "testingType": "Unit",
+      "functionTask": "Show/Hide Modal",
+      "testScenario": "display when visible prop is true",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Modals",
+      "testingType": "Unit",
+      "functionTask": "Close Modal",
+      "testScenario": "emit close event",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Modals",
+      "testingType": "Unit",
+      "functionTask": "Close Modal",
+      "testScenario": "not emit close event when no action is triggered",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "group",
+      "group": "Portfolio Dropdown",
+      "testingType": "Unit"
+    },
+    {
+      "kind": "test",
+      "group": "Portfolio Dropdown",
+      "testingType": "Unit",
+      "functionTask": "handleChange",
+      "testScenario": "select mean_reversion portfolio and update model",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Portfolio Dropdown",
+      "testingType": "Unit",
+      "functionTask": "handleChange",
+      "testScenario": "select mlmc_strategy portfolio and update model",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Portfolio Dropdown",
+      "testingType": "Unit",
+      "functionTask": "handleChange",
+      "testScenario": "not emit before user changes selection",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Portfolio Dropdown",
+      "testingType": "Unit",
+      "functionTask": "Display Loading State",
+      "testScenario": "show skeleton when loading",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Portfolio Dropdown",
+      "testingType": "Unit",
+      "functionTask": "Display Loading State",
+      "testScenario": "show dropdown when not loading",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Portfolio Dropdown",
+      "testingType": "Unit",
+      "functionTask": "Display Loading State",
+      "testScenario": "switch from loading to ready state",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "group",
+      "group": "Sidebar",
+      "testingType": "Unit"
+    },
+    {
+      "kind": "test",
+      "group": "Sidebar",
+      "testingType": "Unit",
+      "functionTask": "Navigate to Dashboard",
+      "testScenario": "emit navigate event with dashboard",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Sidebar",
+      "testingType": "Unit",
+      "functionTask": "Navigate to Trades",
+      "testScenario": "emit navigate event with trades",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Sidebar",
+      "testingType": "Unit",
+      "functionTask": "Navigate to Settings",
+      "testScenario": "emit navigate event with settings",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Sidebar",
+      "testingType": "Unit",
+      "functionTask": "toggleTheme",
+      "testScenario": "switch from dark to light",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Sidebar",
+      "testingType": "Unit",
+      "functionTask": "toggleTheme",
+      "testScenario": "switch from light to dark",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Sidebar",
+      "testingType": "Unit",
+      "functionTask": "Load Theme on Mount",
+      "testScenario": "load dark theme by default",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Sidebar",
+      "testingType": "Unit",
+      "functionTask": "Load Theme on Mount",
+      "testScenario": "keep dark when saved theme is dark",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Sidebar",
+      "testingType": "Unit",
+      "functionTask": "Load Theme on Mount",
+      "testScenario": "persist light theme from localStorage",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Sidebar",
+      "testingType": "Unit",
+      "functionTask": "Load Theme on Mount",
+      "testScenario": "ignore unknown theme values",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "group",
+      "group": "Usability",
+      "testingType": "Usability"
+    },
+    {
+      "kind": "test",
+      "group": "Usability",
+      "testingType": "Usability",
+      "functionTask": "Navigation Experience",
+      "testScenario": "enable seamless navigation",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Usability",
+      "testingType": "Usability",
+      "functionTask": "Navigation Experience",
+      "testScenario": "reject unknown routes and keep current page",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Usability",
+      "testingType": "Usability",
+      "functionTask": "Theme Switching",
+      "testScenario": "persist theme across reloads",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Usability",
+      "testingType": "Usability",
+      "functionTask": "Theme Switching",
+      "testScenario": "restore light mode when saved theme is light",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Usability",
+      "testingType": "Usability",
+      "functionTask": "Responsive Design",
+      "testScenario": "support all screen sizes",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    },
+    {
+      "kind": "test",
+      "group": "Usability",
+      "testingType": "Usability",
+      "functionTask": "Accessibility",
+      "testScenario": "have proper ARIA labels",
+      "teamMember": "Tom",
+      "comments": "",
+      "finished": "X",
+      "status": "PASS"
+    }
+  ]
+}
