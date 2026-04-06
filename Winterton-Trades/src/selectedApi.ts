@@ -44,6 +44,10 @@ export async function fetchUptime(portfolio?: string): Promise<UptimeResponse> {
   return activeApi().fetchUptime(portfolio)
 }
 
+export async function pingBackend(portfolio?: string): Promise<number | null> {
+  return activeApi().pingBackend(portfolio)
+}
+
 export async function fetchMarketIndices(portfolio?: string): Promise<MarketIndicesResponse> {
   return activeApi().fetchMarketIndices(portfolio)
 }

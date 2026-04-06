@@ -135,16 +135,34 @@ export async function fetchUptime(_portfolio?: string): Promise<UptimeResponse> 
     })
   }
 
-  const timeline = []
-  for (let i = 0; i < 40; i++) {
-    timeline.push(150 + Math.random() * 200)
-  }
-
   return {
     uptimePercent: '100.000%',
-    avgResponseTime: '221.22ms',
+    avgResponseTime: 'N/A',
     statusBars: generatedBars,
-    responseTimeline: timeline,
+    responseTimeline: [],
+  }
+}
+
+export async function pingBackend(_portfolio?: string): Promise<number | null> {
+  const start = performance.now()
+
+  try {
+    const response = await fetch('/health', {
+      method: 'GET',
+      cache: 'no-store',
+      headers: {
+        Accept: 'application/json',
+      },
+    })
+
+    if (!response.ok) {
+      return null
+    }
+
+    const durationMs = performance.now() - start
+    return Math.max(0, Math.round(durationMs * 100) / 100)
+  } catch {
+    return null
   }
 }
 

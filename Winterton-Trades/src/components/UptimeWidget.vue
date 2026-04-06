@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import type { UptimePeriod } from '../types/apiTypeDefinitions'
-import { fetchUptime } from '../selectedApi'
+import { fetchUptime, pingBackend } from '../selectedApi'
 
 const props = defineProps<{ portfolio?: string }>()
 
@@ -10,6 +10,31 @@ const uptime = ref('')
 const responseTime = ref('')
 const statusBars = ref<UptimePeriod[]>([])
 const responsePoints = ref<number[]>([])
+
+const PING_REFRESH_MS = 5000
+const MAX_RESPONSE_SAMPLES = 40
+
+function updateResponseAverage(): void {
+  if (responsePoints.value.length === 0) {
+    responseTime.value = 'N/A'
+    return
+  }
+
+  const avg = responsePoints.value.reduce((sum, value) => sum + value, 0) / responsePoints.value.length
+  responseTime.value = `${avg.toFixed(2)}ms`
+}
+
+async function pollBackendPing(): Promise<void> {
+  const pingMs = await pingBackend(props.portfolio)
+  if (pingMs === null) return
+
+  responsePoints.value.push(pingMs)
+  if (responsePoints.value.length > MAX_RESPONSE_SAMPLES) {
+    responsePoints.value.shift()
+  }
+
+  updateResponseAverage()
+}
 
 function getResponsePath(): string {
   if (responsePoints.value.length === 0) return ''
@@ -47,9 +72,10 @@ async function loadData() {
   try {
     const data = await fetchUptime(props.portfolio)
     uptime.value = data.uptimePercent
-    responseTime.value = data.avgResponseTime
     statusBars.value = data.statusBars
     responsePoints.value = data.responseTimeline
+    updateResponseAverage()
+    await pollBackendPing()
   } finally {
     isLoading.value = false
   }
@@ -60,16 +86,14 @@ let refreshInterval: ReturnType<typeof setInterval> | null = null
 onMounted(() => {
   loadData()
 
-  refreshInterval = setInterval(async () => {
-    // TODO: replace with a lightweight polling endpoint, e.g. /api/uptime/latest
-    const newTime = 180 + Math.random() * 80
-    responseTime.value = `${newTime.toFixed(2)}ms`
-    responsePoints.value.push(newTime)
-    if (responsePoints.value.length > 40) responsePoints.value.shift()
-  }, 5000)
+  refreshInterval = setInterval(() => {
+    pollBackendPing()
+  }, PING_REFRESH_MS)
 })
 
 watch(() => props.portfolio, () => {
+  responsePoints.value = []
+  responseTime.value = ''
   loadData()
 })
 

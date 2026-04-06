@@ -66,6 +66,28 @@ async function fetchJson<T>(path: string, query: Record<string, string | number 
   return (await response.json()) as T
 }
 
+export async function pingBackend(portfolio?: string): Promise<number | null> {
+  const start = performance.now()
+
+  try {
+    await fetch(apiUrl('/getUptimePeriod', {
+      portfolio: getPortfolio(portfolio),
+      ts: Date.now(),
+    }), {
+      method: 'GET',
+      cache: 'no-store',
+      headers: {
+        Accept: 'application/json',
+      },
+    })
+
+    const durationMs = performance.now() - start
+    return Math.max(0, Math.round(durationMs * 100) / 100)
+  } catch {
+    return null
+  }
+}
+
 function asNumber(value: unknown, fallback = 0): number {
   const parsed = Number(value)
   return Number.isFinite(parsed) ? parsed : fallback
@@ -288,25 +310,15 @@ export async function fetchUptime(_portfolio?: string): Promise<UptimeResponse> 
     color: value === 100 ? '#26a69a' : value > 80 ? '#ffc107' : '#ef5350',
   }))
 
-  const responseTimeline = withCurrent.map((uptimeValue) => {
-    const base = 180 + (100 - uptimeValue) * 4
-    const noise = (Math.random() - 0.5) * 20
-    return Math.max(40, Math.round((base + noise) * 100) / 100)
-  })
-
-  const avgMs = responseTimeline.length > 0
-    ? responseTimeline.reduce((sum, item) => sum + item, 0) / responseTimeline.length
-    : 0
-
   const periodAverage = withCurrent.length > 0
     ? withCurrent.reduce((sum, item) => sum + item, 0) / withCurrent.length
     : 0
 
   return {
     uptimePercent: formatPercent(parsePercent(cumulativeData.uptimePercent, periodAverage)),
-    avgResponseTime: `${avgMs.toFixed(2)}ms`,
+    avgResponseTime: 'N/A',
     statusBars,
-    responseTimeline,
+    responseTimeline: [],
   }
 }
 
