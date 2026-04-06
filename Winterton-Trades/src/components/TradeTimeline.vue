@@ -217,6 +217,20 @@ function displayTypeClass(trade: TradeRecord): 'buy-text' | 'sell-text' {
   return isLongSide(trade) ? 'buy-text' : 'sell-text'
 }
 
+function displayQuantity(trade: TradeRecord): number {
+  const displayType = displayTradeType(trade)
+  return displayType === 'Long' || displayType === 'Short'
+    ? Math.abs(trade.quantity)
+    : trade.quantity
+}
+
+function displayTotal(trade: TradeRecord): number {
+  const displayType = displayTradeType(trade)
+  return displayType === 'Long' || displayType === 'Short'
+    ? Math.abs(trade.total)
+    : trade.total
+}
+
 function formatPrice(val: number): string {
   return val >= 1
     ? `$${val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
@@ -430,8 +444,8 @@ onUnmounted(() => clearInterval(refreshTimer))
                 <div class="tip-pair">{{ point.trade.pair }}</div>
                 <div class="tip-type" :class="displayTypeClass(point.trade)">{{ displayTradeType(point.trade) }}</div>
                 <div class="tip-price">{{ formatPrice(point.trade.price) }}</div>
-                <div class="tip-detail">Qty: {{ point.trade.quantity }}</div>
-                <div class="tip-detail">Total: {{ formatPrice(point.trade.total) }}</div>
+                <div class="tip-detail">Qty: {{ displayQuantity(point.trade) }}</div>
+                <div class="tip-detail">Total: {{ formatPrice(displayTotal(point.trade)) }}</div>
                 <div class="tip-time">{{ point.trade.date }} {{ point.trade.time }}</div>
               </div>
             </Transition>
@@ -467,8 +481,8 @@ onUnmounted(() => clearInterval(refreshTimer))
                 <div class="tip-pair">{{ point.trade.pair }}</div>
                 <div class="tip-type" :class="displayTypeClass(point.trade)">{{ displayTradeType(point.trade) }}</div>
                 <div class="tip-price">{{ formatPrice(point.trade.price) }}</div>
-                <div class="tip-detail">Qty: {{ point.trade.quantity }}</div>
-                <div class="tip-detail">Total: {{ formatPrice(point.trade.total) }}</div>
+                <div class="tip-detail">Qty: {{ displayQuantity(point.trade) }}</div>
+                <div class="tip-detail">Total: {{ formatPrice(displayTotal(point.trade)) }}</div>
                 <div class="tip-time">{{ point.trade.date }} {{ point.trade.time }}</div>
               </div>
             </Transition>

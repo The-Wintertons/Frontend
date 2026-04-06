@@ -92,6 +92,20 @@ function tradeTypeClass(trade: TradeRecord): 'buy' | 'sell' {
   const displayType = displayTradeType(trade)
   return displayType === 'Buy' || displayType === 'Long' ? 'buy' : 'sell'
 }
+
+function displayQuantity(trade: TradeRecord): number {
+  const displayType = displayTradeType(trade)
+  return displayType === 'Long' || displayType === 'Short'
+    ? Math.abs(trade.quantity)
+    : trade.quantity
+}
+
+function displayTotal(trade: TradeRecord): number {
+  const displayType = displayTradeType(trade)
+  return displayType === 'Long' || displayType === 'Short'
+    ? Math.abs(trade.total)
+    : trade.total
+}
 </script>
 
 <template>
@@ -135,8 +149,8 @@ function tradeTypeClass(trade: TradeRecord): 'buy' | 'sell' {
                   <td class="pair">{{ trade.pair }}</td>
                   <td :class="tradeTypeClass(trade)">{{ displayTradeType(trade) }}</td>
                   <td class="mono">{{ formatPrice(trade.price) }}</td>
-                  <td class="mono">{{ trade.quantity }}</td>
-                  <td class="mono">{{ formatPrice(trade.total) }}</td>
+                  <td class="mono">{{ displayQuantity(trade) }}</td>
+                  <td class="mono">{{ formatPrice(displayTotal(trade)) }}</td>
                   <td>
                     <span class="status-badge" :class="trade.status.toLowerCase()">
                       {{ trade.status }}
