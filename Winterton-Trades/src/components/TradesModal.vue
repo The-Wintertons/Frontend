@@ -8,6 +8,7 @@ const props = defineProps<{ visible: boolean; portfolio?: string }>()
 const emit = defineEmits<{ (e: 'close'): void }>()
 
 const isLoading = ref(true)
+const hasLoadedThisOpen = ref(false)
 const trades = ref<TradeRecord[]>([])
 let refreshInterval: ReturnType<typeof setInterval> | null = null
 let requestInFlight = false
@@ -16,10 +17,13 @@ async function loadData() {
   if (requestInFlight) return
 
   requestInFlight = true
-  isLoading.value = true
+  if (!hasLoadedThisOpen.value) {
+    isLoading.value = true
+  }
   try {
     const data = await fetchTradeHistory(50, 30 * 24 * 60 * 60 * 1000, props.portfolio)
     trades.value = data.trades
+    hasLoadedThisOpen.value = true
   } finally {
     requestInFlight = false
     isLoading.value = false
@@ -54,6 +58,7 @@ watch(() => props.portfolio, () => {
 
 watch(() => props.visible, (visible) => {
   if (visible) {
+    hasLoadedThisOpen.value = false
     loadData()
     startAutoRefresh()
     return
@@ -101,7 +106,7 @@ function formatPrice(val: number): string {
                 </tr>
               </thead>
               <tbody>
-                <tr v-if="isLoading" v-for="idx in 8" :key="`skeleton-row-${idx}`" class="skeleton-row">
+                <tr v-if="isLoading && !hasLoadedThisOpen" v-for="idx in 8" :key="`skeleton-row-${idx}`" class="skeleton-row">
                   <td v-for="col in 9" :key="`skeleton-cell-${idx}-${col}`">
                     <span class="skeleton-cell"></span>
                   </td>
