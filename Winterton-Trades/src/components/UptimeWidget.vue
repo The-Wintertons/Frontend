@@ -107,7 +107,6 @@ onUnmounted(() => {
     <div class="uptime-header">
       <span class="uptime-indicator">📶</span>
       <span class="uptime-label">Uptime ({{ isLoading ? '--.--%' : uptime }})</span>
-      <span class="uptime-period">Last 30 Days ▾</span>
     </div>
 
     <div v-if="isLoading" class="status-bars status-bars-skeleton">
