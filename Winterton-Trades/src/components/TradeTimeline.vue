@@ -161,10 +161,10 @@ function tradeValueMagnitude(trade: TradeRecord): number {
   return Math.abs((trade.price ?? 0) * (trade.quantity ?? 0))
 }
 
-// Max trade value (price * quantity) for scaling bar heights
-const maxTradeValue = computed(() => {
-  if (events.value.length === 0) return 1
-  return Math.max(...events.value.map(tradeValueMagnitude), 1)
+// Max visible trade value (price * quantity) for chart-normalized bar heights
+const maxChartTradeValue = computed(() => {
+  if (visibleEvents.value.length === 0) return 1
+  return Math.max(...visibleEvents.value.map(point => tradeValueMagnitude(point.trade)), 1)
 })
 
 /** 0–100% x position */
@@ -178,8 +178,8 @@ function xPct(timestamp: number): number {
 
 /** Bar height as % of the half-track (buy goes up, sell goes down) */
 function barHeight(trade: TradeRecord): number {
-  const pct = (tradeValueMagnitude(trade) / maxTradeValue.value) * 100
-  return Math.max(pct, 8) // minimum 8% so tiny trades are still visible
+  const pct = (tradeValueMagnitude(trade) / maxChartTradeValue.value) * 100
+  return Math.max(0, Math.min(100, pct))
 }
 
 function hashString(input: string): number {
