@@ -13,6 +13,7 @@ import MarketIndices from './components/MarketIndices.vue'
 import TopHeadlines from './components/TopHeadlines.vue'
 import BlankScene from './TresJS/BlankScene.vue'
 import PortfolioDropdown from './components/PortfolioDropdown.vue'
+import { setApiSource, type ApiSource } from './apiSource'
 import { Clock } from 'lucide-vue-next'
 
 type SyncedRange = {
@@ -24,6 +25,7 @@ const showTradesModal = ref(false)
 const showSettingsModal = ref(false)
 const syncedRange = ref<SyncedRange | null>(null)
 const selectedPortfolio = ref('Main Portfolio')
+const dashboardKey = ref(0)
 
 /** Whether the TresJS scene is mounted on top of the dashboard */
 const showScene = ref(true)
@@ -38,6 +40,12 @@ function handleEnterScene() {
 function handleSceneExit() {
   showScene.value = false
   irisSwitchRef.value?.collapse()
+}
+
+function handleSceneSelect(source: ApiSource) {
+  setApiSource(source)
+  dashboardKey.value += 1
+  handleSceneExit()
 }
 
 const now = ref(Date.now())
@@ -76,11 +84,11 @@ function handleNavigate(page: string) {
 
     <!-- TresJS scene mounts over everything once the iris is fully expanded -->
     <Teleport to="body">
-      <BlankScene :visible="showScene" @exit="handleSceneExit" />
+      <BlankScene :visible="showScene" @select-source="handleSceneSelect" @exit="handleSceneExit" />
     </Teleport>
 
     <main class="main-content">
-      <div class="page-content">
+      <div class="page-content" :key="dashboardKey">
         <div class="page-title-row">
           <div class="title-with-dropdown">
             <h1 class="page-title">Dashboard</h1>

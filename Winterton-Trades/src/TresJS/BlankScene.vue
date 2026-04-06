@@ -5,9 +5,13 @@ import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { BufferGeometry, Float32BufferAttribute, MeshBasicMaterial, PointsMaterial, Uint32BufferAttribute, ShaderMaterial, AdditiveBlending } from 'three'
 import { Delaunay } from 'd3-delaunay'
 import logoPath from '../assets/Logo.glb?url'
+import type { ApiSource } from '../apiSource'
 
 const props = defineProps<{ visible: boolean }>()
-const emit = defineEmits<{ (e: 'exit'): void }>()
+const emit = defineEmits<{
+  (e: 'exit'): void
+  (e: 'select-source', source: ApiSource): void
+}>()
 
 const LOGO_BASE_POS: [number, number, number] = [0, 3.42, -6.25]
 const BUTTON_BASE_POS: [number, number, number] = [0, 0.22, -5.5]
@@ -43,6 +47,10 @@ let waveColorAttribute: Float32BufferAttribute | null = null
 let hasActiveRipplesLastFrame = false
 
 const ripples: { x: number; z: number; startTime: number }[] = []
+
+function selectSource(source: ApiSource) {
+  emit('select-source', source)
+}
 
 function onWaveClick(e: any) {
   if (e && e.object && e.point) {
@@ -408,15 +416,18 @@ onUnmounted(() => {
         <GLTFModel :path="logoPath" :scale="1.12" :depth-test="false" />
       </TresGroup>
 
-      <!-- Futuristic 3D start button below the logo -->
-      <TresGroup :position="buttonPosition" :rotation="buttonRotation" @click="emit('exit')">
+      <!-- Futuristic 3D startup controls below the logo -->
+      <TresGroup :position="buttonPosition" :rotation="buttonRotation">
         <!-- Dark background plate to occlude stars behind the button -->
         <TresMesh>
-          <TresBoxGeometry :args="[2.45, 0.6, 0.08]" />
+          <TresBoxGeometry :args="[4.7, 0.9, 0.08]" />
           <TresMeshBasicMaterial color="#020204" :transparent="true" :opacity="0.8" :depth-test="false" />
         </TresMesh>
         <Html transform center :position="[0, 0, 0.1]">
-          <button class="start-label" @click.stop="emit('exit')">START</button>
+          <div class="startup-actions" @click.stop>
+            <button class="start-label" @click="selectSource('true-api')">START</button>
+            <button class="view-label" @click="selectSource('frontend-api')">VIEW FRONTEND</button>
+          </div>
         </Html>
       </TresGroup>
 
@@ -465,5 +476,32 @@ onUnmounted(() => {
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.3) inset, 0 0 20px rgba(255, 255, 255, 0.1);
   text-shadow: 0 0 12px rgba(255, 255, 255, 1);
   border-color: rgba(255, 255, 255, 0.8);
+}
+
+.startup-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.view-label {
+  border: 1px solid rgba(136, 177, 255, 0.45);
+  border-radius: 0.15rem;
+  padding: 0.4rem 1rem;
+  background: rgba(30, 38, 58, 0.55);
+  color: #eaf1ff;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+  text-shadow: 0 0 6px rgba(170, 207, 255, 0.35);
+}
+
+.view-label:hover {
+  background: rgba(65, 90, 140, 0.28);
+  box-shadow: 0 0 14px rgba(152, 189, 255, 0.2) inset, 0 0 18px rgba(124, 171, 255, 0.16);
+  border-color: rgba(166, 203, 255, 0.85);
 }
 </style>

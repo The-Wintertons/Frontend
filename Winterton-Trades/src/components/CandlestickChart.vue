@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { createChart, type IChartApi, type ISeriesApi, AreaSeries, ColorType } from 'lightweight-charts'
-import { fetchPortfolioChart } from '../api'
+import { fetchPortfolioChart } from '../selectedApi'
 
 // Adjustable parameter to bring the start/end dates inward (in milliseconds)
 // e.g. 1 day = 24 * 60 * 60 * 1000

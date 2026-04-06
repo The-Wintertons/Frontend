@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import type { MarketIndex } from '../types/apiTypeDefinitions'
-import { fetchMarketIndices } from '../api'
+import { fetchMarketIndices } from '../selectedApi'
 
 const props = defineProps<{ portfolio?: string }>()
 

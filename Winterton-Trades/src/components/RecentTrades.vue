@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import type { RecentTrade } from '../types/apiTypeDefinitions'
-import { fetchRecentTrades, generateRecentTrade } from '../api'
+import { fetchRecentTrades, generateRecentTrade } from '../selectedApi'
 
 const props = defineProps<{ portfolio?: string }>()
 

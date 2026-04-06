@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { X, Save, AlertCircle } from 'lucide-vue-next'
-import { updateModelParameters } from '../api'
+import { updateModelParameters } from '../selectedApi'
 
 const props = defineProps<{ visible: boolean }>()
 const emit = defineEmits<{ (e: 'close'): void }>()

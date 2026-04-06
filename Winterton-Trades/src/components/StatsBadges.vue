@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
-import { fetchStats } from '../api'
+import { fetchStats } from '../selectedApi'
 
 const props = defineProps<{ portfolio?: string }>()
 

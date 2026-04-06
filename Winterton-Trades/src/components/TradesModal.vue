@@ -2,7 +2,7 @@
 import { ref, onMounted, watch } from 'vue'
 import { X } from 'lucide-vue-next'
 import type { TradeRecord } from '../types/apiTypeDefinitions'
-import { fetchTradeHistory } from '../api'
+import { fetchTradeHistory } from '../selectedApi'
 
 const props = defineProps<{ visible: boolean; portfolio?: string }>()
 const emit = defineEmits<{ (e: 'close'): void }>()

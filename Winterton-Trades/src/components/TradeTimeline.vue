@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import type { TradeRecord } from '../types/apiTypeDefinitions'
-import { fetchTradeHistory } from '../api'
+import { fetchTradeHistory } from '../selectedApi'
 
 type SyncedRange = {
   start: number

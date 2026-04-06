@@ -4,9 +4,9 @@ import { ref } from 'vue'
 const emit = defineEmits<{ (e: 'enter'): void }>()
 
 /** Whether the switch is in the ON position */
-const isOn = ref(true)
+const isOn = ref(false)
 /** Animating the iris in (expand) or out (shrink) */
-const phase = ref<'idle' | 'expanding' | 'done' | 'collapsing'>('done')
+const phase = ref<'idle' | 'expanding' | 'done' | 'collapsing'>('idle')
 
 /** CSS custom-property values updated just before the animation runs */
 const irisX = ref('50%')

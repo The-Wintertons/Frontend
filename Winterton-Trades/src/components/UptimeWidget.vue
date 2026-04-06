@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import type { UptimePeriod } from '../types/apiTypeDefinitions'
-import { fetchUptime } from '../api'
+import { fetchUptime } from '../selectedApi'
 
 const props = defineProps<{ portfolio?: string }>()
 

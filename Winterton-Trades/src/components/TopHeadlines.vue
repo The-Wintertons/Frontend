@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
 import type { TopHeadline } from '../types/apiTypeDefinitions'
-import { fetchTopHeadlines } from '../api'
+import { fetchTopHeadlines } from '../selectedApi'
 
 const props = defineProps<{ portfolio?: string }>()
 
