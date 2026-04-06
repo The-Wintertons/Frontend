@@ -1,3 +1,6 @@
 .vercel
 .env
 dist
+
+# Don't commit submodules
+**/node_modules/
