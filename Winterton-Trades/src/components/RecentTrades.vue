@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import type { RecentTrade } from '../types/apiTypeDefinitions'
-import { fetchRecentTrades, generateRecentTrade } from '../selectedApi'
+import { fetchRecentTrades } from '../selectedApi'
 
 const props = defineProps<{ portfolio?: string }>()
 
@@ -9,13 +9,18 @@ const loading = ref(true)
 const trades = ref<RecentTrade[]>([])
 
 let interval: ReturnType<typeof setInterval> | null = null
+let requestInFlight = false
 
 async function loadData() {
+  if (requestInFlight) return
+
+  requestInFlight = true
   loading.value = true
   try {
     const data = await fetchRecentTrades(props.portfolio)
     trades.value = data.trades
   } finally {
+    requestInFlight = false
     loading.value = false
   }
 }
@@ -23,12 +28,10 @@ async function loadData() {
 onMounted(() => {
   loadData()
 
-  // Simulate real-time trades every 3-8 seconds
+  // Poll live trades from API to keep widget in sync.
   interval = setInterval(() => {
-    if (loading.value) return
-    trades.value.unshift(generateRecentTrade(props.portfolio))
-    if (trades.value.length > 20) trades.value.pop()
-  }, 3000 + Math.random() * 5000)
+    loadData()
+  }, 5000)
 })
 
 watch(() => props.portfolio, () => {

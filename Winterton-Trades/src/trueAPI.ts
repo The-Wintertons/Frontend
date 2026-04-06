@@ -75,6 +75,43 @@ function asString(value: unknown, fallback = ''): string {
   return typeof value === 'string' ? value : fallback
 }
 
+function normalizePercent(value: number): number {
+  if (!Number.isFinite(value)) return 0
+
+  let normalized = value
+
+  // Handle decimal ratios provided as 0..1.
+  if (normalized > 0 && normalized <= 1) {
+    normalized *= 100
+  }
+
+  // Handle whole-percent values accidentally scaled by 100 (e.g. 400 => 4%).
+  if (normalized > 100 && normalized <= 10000) {
+    normalized /= 100
+  }
+
+  return Math.min(100, Math.max(0, normalized))
+}
+
+function parsePercent(value: unknown, fallback = 0): number {
+  if (typeof value === 'number') {
+    return normalizePercent(value)
+  }
+
+  if (typeof value === 'string') {
+    const parsed = Number.parseFloat(value.replace('%', '').trim())
+    if (Number.isFinite(parsed)) {
+      return normalizePercent(parsed)
+    }
+  }
+
+  return normalizePercent(fallback)
+}
+
+function formatPercent(value: number): string {
+  return `${normalizePercent(value).toFixed(3)}%`
+}
+
 function formatUsd(value: number): string {
   if (value >= 1) {
     return `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
@@ -224,14 +261,16 @@ export function generateRecentTrade(portfolio?: string): RecentTrade {
 export async function fetchUptime(_portfolio?: string): Promise<UptimeResponse> {
   type BackendPeriod = { value?: number }
   type BackendCumulative = {
-    uptimePercent?: string
+    uptimePercent?: string | number
     UptimePeriods?: number[]
     uptimePeriods?: number[]
   }
 
+  const portfolio = getPortfolio(_portfolio)
+
   const [periodData, cumulativeData] = await Promise.all([
-    fetchJson<BackendPeriod>('/getUptimePeriod'),
-    fetchJson<BackendCumulative>('/getCumulativeUptime'),
+    fetchJson<BackendPeriod>('/getUptimePeriod', { portfolio }),
+    fetchJson<BackendCumulative>('/getCumulativeUptime', { portfolio }),
   ])
 
   const periodValues = cumulativeData.UptimePeriods ?? cumulativeData.uptimePeriods ?? []
@@ -257,8 +296,12 @@ export async function fetchUptime(_portfolio?: string): Promise<UptimeResponse> 
     ? responseTimeline.reduce((sum, item) => sum + item, 0) / responseTimeline.length
     : 0
 
+  const periodAverage = withCurrent.length > 0
+    ? withCurrent.reduce((sum, item) => sum + item, 0) / withCurrent.length
+    : 0
+
   return {
-    uptimePercent: asString(cumulativeData.uptimePercent, '0.000%'),
+    uptimePercent: formatPercent(parsePercent(cumulativeData.uptimePercent, periodAverage)),
     avgResponseTime: `${avgMs.toFixed(2)}ms`,
     statusBars,
     responseTimeline,

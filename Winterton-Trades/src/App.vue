@@ -24,7 +24,7 @@ type SyncedRange = {
 const showTradesModal = ref(false)
 const showSettingsModal = ref(false)
 const syncedRange = ref<SyncedRange | null>(null)
-const selectedPortfolio = ref('Main Portfolio')
+const selectedPortfolio = ref('mean_reversion')
 const dashboardKey = ref(0)
 
 /** Whether the TresJS scene is mounted on top of the dashboard */

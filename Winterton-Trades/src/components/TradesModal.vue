@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { X } from 'lucide-vue-next'
 import type { TradeRecord } from '../types/apiTypeDefinitions'
 import { fetchTradeHistory } from '../selectedApi'
@@ -9,23 +9,61 @@ const emit = defineEmits<{ (e: 'close'): void }>()
 
 const isLoading = ref(true)
 const trades = ref<TradeRecord[]>([])
+let refreshInterval: ReturnType<typeof setInterval> | null = null
+let requestInFlight = false
 
 async function loadData() {
+  if (requestInFlight) return
+
+  requestInFlight = true
   isLoading.value = true
   try {
     const data = await fetchTradeHistory(50, 30 * 24 * 60 * 60 * 1000, props.portfolio)
     trades.value = data.trades
   } finally {
+    requestInFlight = false
     isLoading.value = false
   }
 }
 
+function startAutoRefresh() {
+  if (refreshInterval) return
+  refreshInterval = setInterval(() => {
+    loadData()
+  }, 5000)
+}
+
+function stopAutoRefresh() {
+  if (!refreshInterval) return
+  clearInterval(refreshInterval)
+  refreshInterval = null
+}
+
 onMounted(() => {
-  loadData()
+  if (props.visible) {
+    loadData()
+    startAutoRefresh()
+  }
 })
 
 watch(() => props.portfolio, () => {
-  loadData()
+  if (props.visible) {
+    loadData()
+  }
+})
+
+watch(() => props.visible, (visible) => {
+  if (visible) {
+    loadData()
+    startAutoRefresh()
+    return
+  }
+
+  stopAutoRefresh()
+})
+
+onUnmounted(() => {
+  stopAutoRefresh()
 })
 
 function formatPrice(val: number): string {

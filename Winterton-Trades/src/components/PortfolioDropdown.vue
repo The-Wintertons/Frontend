@@ -8,7 +8,7 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
 }>()
 
-const portfolios = ['Main Portfolio', 'Crypto', 'Stocks']
+const portfolios = ['mean_reversion', 'mlmc_strategy']
 
 function handleChange(event: Event) {
   const target = event.target as HTMLSelectElement
