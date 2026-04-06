@@ -7,6 +7,7 @@ const props = defineProps<{ portfolio?: string }>()
 
 const loading = ref(true)
 const trades = ref<RecentTrade[]>([])
+const hasLoadedOnce = ref(false)
 
 let interval: ReturnType<typeof setInterval> | null = null
 let requestInFlight = false
@@ -15,10 +16,13 @@ async function loadData() {
   if (requestInFlight) return
 
   requestInFlight = true
-  loading.value = true
+  if (!hasLoadedOnce.value) {
+    loading.value = true
+  }
   try {
     const data = await fetchRecentTrades(props.portfolio)
     trades.value = data.trades
+    hasLoadedOnce.value = true
   } finally {
     requestInFlight = false
     loading.value = false
