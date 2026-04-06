@@ -76,6 +76,22 @@ function formatPrice(val: number): string {
     ? `$${val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
     : `$${val.toFixed(4)}`
 }
+
+function isNegativeTrade(trade: TradeRecord): boolean {
+  return trade.quantity < 0 || trade.total < 0
+}
+
+function displayTradeType(trade: TradeRecord): 'Buy' | 'Sell' | 'Long' | 'Short' {
+  if (!isNegativeTrade(trade)) {
+    return trade.type
+  }
+  return trade.type === 'Buy' ? 'Short' : 'Long'
+}
+
+function tradeTypeClass(trade: TradeRecord): 'buy' | 'sell' {
+  const displayType = displayTradeType(trade)
+  return displayType === 'Buy' || displayType === 'Long' ? 'buy' : 'sell'
+}
 </script>
 
 <template>
@@ -117,7 +133,7 @@ function formatPrice(val: number): string {
                   <td>{{ trade.date }}</td>
                   <td class="mono">{{ trade.time }}</td>
                   <td class="pair">{{ trade.pair }}</td>
-                  <td :class="trade.type === 'Buy' ? 'buy' : 'sell'">{{ trade.type }}</td>
+                  <td :class="tradeTypeClass(trade)">{{ displayTradeType(trade) }}</td>
                   <td class="mono">{{ formatPrice(trade.price) }}</td>
                   <td class="mono">{{ trade.quantity }}</td>
                   <td class="mono">{{ formatPrice(trade.total) }}</td>

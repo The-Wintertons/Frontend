@@ -55,12 +55,12 @@ export async function fetchRecentTrades(_portfolio?: string): Promise<RecentTrad
   
   return {
     trades: [
-      { time: '10:32:14', pair: 'BTC/USDT', type: 'Buy', price: '$42,183.22' },
-      { time: '10:31:58', pair: 'ETH/USDT', type: 'Sell', price: '$2,318.77' },
-      { time: '10:30:45', pair: 'SOL/USDT', type: 'Buy', price: '$112.04' },
-      { time: '10:29:03', pair: 'BTC/USDT', type: 'Sell', price: '$42,101.10' },
-      { time: '10:28:41', pair: 'AVAX/USDT', type: 'Buy', price: '$38.15' },
-      { time: '10:28:02', pair: 'ETH/USDT', type: 'Buy', price: '$2,322.10' },
+      { time: '10:32:14', pair: 'BTC/USDT', type: 'Buy', quantity: 0.08, total: 3374.66, price: '$42,183.22' },
+      { time: '10:31:58', pair: 'ETH/USDT', type: 'Sell', quantity: 0.6, total: 1391.26, price: '$2,318.77' },
+      { time: '10:30:45', pair: 'SOL/USDT', type: 'Buy', quantity: -4.5, total: -504.18, price: '$112.04' },
+      { time: '10:29:03', pair: 'BTC/USDT', type: 'Sell', quantity: -0.04, total: -1684.04, price: '$42,101.10' },
+      { time: '10:28:41', pair: 'AVAX/USDT', type: 'Buy', quantity: 22.1, total: 843.12, price: '$38.15' },
+      { time: '10:28:02', pair: 'ETH/USDT', type: 'Buy', quantity: 1.2, total: 2786.52, price: '$2,322.10' },
     ]
   }
 }
@@ -78,6 +78,7 @@ export function generateRecentTrade(_portfolio?: string): RecentTrade {
     time,
     pair,
     type,
+    quantity: +(Math.random() * 3 + 0.01).toFixed(4),
     price: price >= 1
       ? `$${price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
       : `$${price.toFixed(4)}`,

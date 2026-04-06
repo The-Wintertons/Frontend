@@ -76,6 +76,10 @@ export interface RecentTrade {
   pair: string
   /** Direction of the trade */
   type: 'Buy' | 'Sell'
+  /** Optional signed quantity used for long/short display mapping. */
+  quantity?: number
+  /** Optional signed notional used for long/short display mapping. */
+  total?: number
   /**
    * Formatted price string including currency symbol, e.g. "$42,183.22".
    * The backend should pre-format this so the UI can render it directly.

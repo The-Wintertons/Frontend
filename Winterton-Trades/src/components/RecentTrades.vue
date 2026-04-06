@@ -29,6 +29,22 @@ async function loadData() {
   }
 }
 
+function isNegativeTrade(trade: RecentTrade): boolean {
+  return (trade.quantity ?? 0) < 0 || (trade.total ?? 0) < 0
+}
+
+function displayTradeType(trade: RecentTrade): 'Buy' | 'Sell' | 'Long' | 'Short' {
+  if (!isNegativeTrade(trade)) {
+    return trade.type
+  }
+  return trade.type === 'Buy' ? 'Short' : 'Long'
+}
+
+function tradeTypeClass(trade: RecentTrade): 'buy' | 'sell' {
+  const displayType = displayTradeType(trade)
+  return displayType === 'Buy' || displayType === 'Long' ? 'buy' : 'sell'
+}
+
 onMounted(() => {
   loadData()
 
@@ -68,7 +84,7 @@ onUnmounted(() => {
         <tr v-else v-for="(trade, idx) in trades.slice(0, 10)" :key="idx">
           <td>{{ trade.time }}</td>
           <td>{{ trade.pair }}</td>
-          <td :class="trade.type === 'Buy' ? 'buy' : 'sell'">{{ trade.type }}</td>
+          <td :class="tradeTypeClass(trade)">{{ displayTradeType(trade) }}</td>
           <td>{{ trade.price }}</td>
         </tr>
       </tbody>

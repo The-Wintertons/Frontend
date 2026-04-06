@@ -153,6 +153,8 @@ function toRecentTrade(record: TradeRecord): RecentTrade {
     time: record.time,
     pair: record.pair,
     type: record.type,
+    quantity: record.quantity,
+    total: record.total,
     price: formatUsd(record.price),
   }
 }

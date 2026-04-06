@@ -192,6 +192,31 @@ function barColor(pair: string): string {
   return pairColours[pair] ?? '#888'
 }
 
+function isNegativeTrade(trade: TradeRecord): boolean {
+  return trade.quantity < 0 || trade.total < 0
+}
+
+function displayTradeType(trade: TradeRecord): 'Buy' | 'Sell' | 'Long' | 'Short' {
+  if (!isNegativeTrade(trade)) {
+    return trade.type
+  }
+  return trade.type === 'Buy' ? 'Short' : 'Long'
+}
+
+function isLongSide(trade: TradeRecord): boolean {
+  const displayType = displayTradeType(trade)
+  return displayType === 'Buy' || displayType === 'Long'
+}
+
+function isShortSide(trade: TradeRecord): boolean {
+  const displayType = displayTradeType(trade)
+  return displayType === 'Sell' || displayType === 'Short'
+}
+
+function displayTypeClass(trade: TradeRecord): 'buy-text' | 'sell-text' {
+  return isLongSide(trade) ? 'buy-text' : 'sell-text'
+}
+
 function formatPrice(val: number): string {
   return val >= 1
     ? `$${val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
@@ -339,10 +364,10 @@ onUnmounted(() => clearInterval(refreshTimer))
           </span>
           <span class="legend-divider" />
           <span class="legend-item">
-            <span class="legend-swatch legend-buy" /> Buy
+            <span class="legend-swatch legend-buy" /> Buy / Long
           </span>
           <span class="legend-item">
-            <span class="legend-swatch legend-sell" /> Sell
+            <span class="legend-swatch legend-sell" /> Sell / Short
           </span>
         </div>
         <span class="legend-divider d-mobile-none" />
@@ -381,7 +406,7 @@ onUnmounted(() => clearInterval(refreshTimer))
       <div class="timeline-chart">
         <!-- Buy half (bars grow upward) -->
         <div class="chart-half chart-buy">
-          <div class="half-label">BUY</div>
+          <div class="half-label">BUY / LONG</div>
           <div
             v-for="point in visibleEvents"
             :key="'b-' + point.key"
@@ -391,7 +416,7 @@ onUnmounted(() => clearInterval(refreshTimer))
             @mouseleave="hoveredKey = null"
           >
             <div
-              v-if="point.trade.type === 'Buy'"
+              v-if="isLongSide(point.trade)"
               class="bar bar-buy"
               :style="{
                 height: barHeight(point.trade) + '%',
@@ -401,9 +426,9 @@ onUnmounted(() => clearInterval(refreshTimer))
 
             <!-- Tooltip (buy side) -->
             <Transition name="tip">
-              <div v-if="hoveredKey === point.key && point.trade.type === 'Buy'" class="bar-tooltip bar-tooltip--above">
+              <div v-if="hoveredKey === point.key && isLongSide(point.trade)" class="bar-tooltip bar-tooltip--above">
                 <div class="tip-pair">{{ point.trade.pair }}</div>
-                <div class="tip-type buy-text">Buy</div>
+                <div class="tip-type" :class="displayTypeClass(point.trade)">{{ displayTradeType(point.trade) }}</div>
                 <div class="tip-price">{{ formatPrice(point.trade.price) }}</div>
                 <div class="tip-detail">Qty: {{ point.trade.quantity }}</div>
                 <div class="tip-detail">Total: {{ formatPrice(point.trade.total) }}</div>
@@ -418,7 +443,7 @@ onUnmounted(() => clearInterval(refreshTimer))
 
         <!-- Sell half (bars grow downward) -->
         <div class="chart-half chart-sell">
-          <div class="half-label">SELL</div>
+          <div class="half-label">SELL / SHORT</div>
           <div
             v-for="point in visibleEvents"
             :key="'s-' + point.key"
@@ -428,7 +453,7 @@ onUnmounted(() => clearInterval(refreshTimer))
             @mouseleave="hoveredKey = null"
           >
             <div
-              v-if="point.trade.type === 'Sell'"
+              v-if="isShortSide(point.trade)"
               class="bar bar-sell"
               :style="{
                 height: barHeight(point.trade) + '%',
@@ -438,9 +463,9 @@ onUnmounted(() => clearInterval(refreshTimer))
 
             <!-- Tooltip (sell side) -->
             <Transition name="tip">
-              <div v-if="hoveredKey === point.key && point.trade.type === 'Sell'" class="bar-tooltip bar-tooltip--below">
+              <div v-if="hoveredKey === point.key && isShortSide(point.trade)" class="bar-tooltip bar-tooltip--below">
                 <div class="tip-pair">{{ point.trade.pair }}</div>
-                <div class="tip-type sell-text">Sell</div>
+                <div class="tip-type" :class="displayTypeClass(point.trade)">{{ displayTradeType(point.trade) }}</div>
                 <div class="tip-price">{{ formatPrice(point.trade.price) }}</div>
                 <div class="tip-detail">Qty: {{ point.trade.quantity }}</div>
                 <div class="tip-detail">Total: {{ formatPrice(point.trade.total) }}</div>
