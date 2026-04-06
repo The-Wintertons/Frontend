@@ -13,14 +13,28 @@ const responsePoints = ref<number[]>([])
 
 function getResponsePath(): string {
   if (responsePoints.value.length === 0) return ''
+
+  const safePoints = responsePoints.value
+    .map((val) => Number(val))
+    .filter((val) => Number.isFinite(val))
+
+  if (safePoints.length === 0) return ''
+
   const width = 280
   const height = 50
-  const maxVal = Math.max(...responsePoints.value)
-  const minVal = Math.min(...responsePoints.value)
+  const maxVal = Math.max(...safePoints)
+  const minVal = Math.min(...safePoints)
   const range = maxVal - minVal || 1
 
-  const points = responsePoints.value.map((val, idx) => {
-    const x = (idx / (responsePoints.value.length - 1)) * width
+  if (safePoints.length === 1) {
+    const firstPoint = safePoints[0]
+    if (firstPoint === undefined) return ''
+    const y = height - ((firstPoint - minVal) / range) * (height - 10) - 5
+    return `M 0,${y} L ${width},${y}`
+  }
+
+  const points = safePoints.map((val, idx) => {
+    const x = (idx / (safePoints.length - 1)) * width
     const y = height - ((val - minVal) / range) * (height - 10) - 5
     return `${x},${y}`
   })
