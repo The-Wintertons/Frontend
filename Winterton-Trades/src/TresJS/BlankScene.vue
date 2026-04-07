@@ -2,10 +2,12 @@
 import { TresCanvas } from '@tresjs/core'
 import { GLTFModel, Html, Stars } from '@tresjs/cientos'
 import { ref, watch, onMounted, onUnmounted } from 'vue'
-import { BufferGeometry, Float32BufferAttribute, MeshBasicMaterial, PointsMaterial, Uint32BufferAttribute, ShaderMaterial, AdditiveBlending } from 'three'
+import { AdditiveBlending, BufferGeometry, CatmullRomCurve3, Float32BufferAttribute, MeshBasicMaterial, PointsMaterial, Uint32BufferAttribute, ShaderMaterial, Vector3 } from 'three'
 import { Delaunay } from 'd3-delaunay'
 import logoPath from '../assets/Logo.glb?url'
 import type { ApiSource } from '../apiSource'
+import { setApiSource } from '../apiSource'
+import { fetchPortfolioChart } from '../selectedApi'
 
 const props = defineProps<{ visible: boolean }>()
 const emit = defineEmits<{
@@ -21,6 +23,13 @@ const logoPosition = ref<[number, number, number]>([...LOGO_BASE_POS])
 const buttonPosition = ref<[number, number, number]>([...BUTTON_BASE_POS])
 const buttonRotation = ref<[number, number, number]>([-0.15, 0, 0])
 let rafId: number | null = null
+
+const sceneMode = ref<'wave' | 'coaster'>('wave')
+const coasterTrackSegments = ref<{ position: [number, number, number]; rotation: [number, number, number]; length: number }[]>([])
+const coasterSupports = ref<{ position: [number, number, number]; height: number }[]>([])
+const coasterCartPosition = ref<[number, number, number]>([0, 0, 0])
+const coasterCartRotation = ref<[number, number, number]>([0, 0, 0])
+let coasterCurve: CatmullRomCurve3 | null = null
 
 const waveMeshGeometry = ref<BufferGeometry | null>(null)
 const waveProxyGeometry = ref<BufferGeometry | null>(null)
@@ -47,9 +56,105 @@ let waveColorAttribute: Float32BufferAttribute | null = null
 let hasActiveRipplesLastFrame = false
 
 const ripples: { x: number; z: number; startTime: number }[] = []
+const coasterOptions = [
+  { label: 'real: mean_reversion', apiSource: 'true-api', portfolio: 'mean_reversion' },
+  { label: 'real: mlmc_strategy', apiSource: 'true-api', portfolio: 'mlmc_strategy' },
+  { label: 'simulated: mean_reversion', apiSource: 'frontend-api', portfolio: 'mean_reversion' },
+  { label: 'simulated: mlmc_strategy', apiSource: 'frontend-api', portfolio: 'mlmc_strategy' },
+] as const
+type CoasterOption = (typeof coasterOptions)[number]
 
-function selectSource(source: ApiSource) {
+function handlePrimaryAction(source: ApiSource) {
+  sceneMode.value = 'wave'
   emit('select-source', source)
+}
+
+async function handleCoasterSelection(event: Event) {
+  const target = event.target as HTMLSelectElement | null
+  if (!target) return
+
+  const selectedOption = coasterOptions.find(option => option.label === target.value)
+  if (!selectedOption) return
+
+  await activateRollercoaster(selectedOption)
+  target.selectedIndex = 0
+}
+
+function buildRollercoaster(data: { time: string; value: number }[]) {
+  if (data.length < 2) return
+
+  const values = data.map(point => point.value)
+  const minValue = Math.min(...values)
+  const maxValue = Math.max(...values)
+  const valueSpan = Math.max(maxValue - minValue, 1)
+  const trackWidth = 30
+  const trackHeight = 10
+  const trackBaseY = -8
+  const trackDepth = -9.9
+  const supportGap = 0.18
+
+  const controlPoints = data.map((point, index) => {
+    const t = index / (data.length - 1)
+    const x = -trackWidth / 2 + t * trackWidth
+    const normalizedValue = (point.value - minValue) / valueSpan
+    const y = trackBaseY + normalizedValue * trackHeight
+    return new Vector3(x, y, trackDepth)
+  })
+
+  coasterCurve = new CatmullRomCurve3(controlPoints, false, 'catmullrom', 0.25)
+
+  const sampledPoints = coasterCurve.getPoints(Math.max(72, data.length * 6))
+  const trackSegments: { position: [number, number, number]; rotation: [number, number, number]; length: number }[] = []
+  const supports: { position: [number, number, number]; height: number }[] = []
+
+  for (let i = 1; i < sampledPoints.length; i += 1) {
+    const previous = sampledPoints[i - 1]!
+    const current = sampledPoints[i]!
+    const dx = current.x - previous.x
+    const dy = current.y - previous.y
+    const length = Math.max(Math.hypot(dx, dy), 0.001)
+    const angle = Math.atan2(dy, dx)
+
+    trackSegments.push({
+      position: [
+        (previous.x + current.x) / 2,
+        (previous.y + current.y) / 2,
+        trackDepth,
+      ],
+      rotation: [0, 0, angle],
+      length,
+    })
+  }
+
+  for (let i = 0; i < sampledPoints.length; i += 5) {
+    const point = sampledPoints[i]!
+    const height = Math.max(point.y - trackBaseY - supportGap, 0.2)
+    supports.push({
+      position: [point.x, trackBaseY + height / 2, trackDepth],
+      height,
+    })
+  }
+
+  coasterTrackSegments.value = trackSegments
+  coasterSupports.value = supports
+
+  const firstPoint = coasterCurve.getPointAt(0)
+  const firstTangent = coasterCurve.getTangentAt(0)
+  coasterCartPosition.value = [firstPoint.x, firstPoint.y + 0.22, firstPoint.z]
+  coasterCartRotation.value = [0, 0, Math.atan2(firstTangent.y, firstTangent.x)]
+}
+
+async function activateRollercoaster(option: CoasterOption) {
+  setApiSource(option.apiSource)
+
+  try {
+    const { data } = await fetchPortfolioChart(option.portfolio)
+    buildRollercoaster(data)
+    sceneMode.value = 'coaster'
+  } catch {
+    sceneMode.value = 'coaster'
+    coasterCurve = null
+  }
 }
 
 function onWaveClick(e: any) {
@@ -61,6 +166,17 @@ function onWaveClick(e: any) {
        startTime: performance.now() * 0.001
      })
   }
+}
+
+function updateRollercoasterField(elapsedSeconds: number) {
+  if (!coasterCurve) return
+
+  const progress = (elapsedSeconds * 0.06) % 1
+
+  const currentPoint = coasterCurve.getPointAt(progress)
+  const currentTangent = coasterCurve.getTangentAt(progress)
+  coasterCartPosition.value = [currentPoint.x, currentPoint.y + 0.22, currentPoint.z]
+  coasterCartRotation.value = [0, 0, Math.atan2(currentTangent.y, currentTangent.x)]
 }
 
 function initializeWaveField() {
@@ -316,7 +432,11 @@ function animate() {
   logoSpinZ.value -= 0.0014
   if (waveStartTime === 0) waveStartTime = performance.now()
   const elapsedSeconds = (performance.now() - waveStartTime) * 0.001
-  updateWaveField(elapsedSeconds)
+  if (sceneMode.value === 'wave') {
+    updateWaveField(elapsedSeconds)
+  } else {
+    updateRollercoasterField(elapsedSeconds)
+  }
 
   const logoFloat = Math.sin(elapsedSeconds * 0.9) * 0.08
   logoPosition.value = [LOGO_BASE_POS[0], LOGO_BASE_POS[1] + logoFloat, LOGO_BASE_POS[2]]
@@ -383,7 +503,7 @@ onUnmounted(() => {
       <TresPointLight :position="[0, 1.05, -4.8]" :intensity="2" color="#a5deff" />
 
       <!-- Delaunay-triangulated animated wave background -->
-      <TresGroup :position="[0, -2.25, -9.9]" >
+      <TresGroup v-if="sceneMode === 'wave'" :position="[0, -2.25, -9.9]" >
         <!-- Invisible hit plane for fast raycasting -->
         <TresMesh
           v-if="waveProxyGeometry"
@@ -411,6 +531,37 @@ onUnmounted(() => {
         />
       </TresGroup>
 
+      <!-- Simple side-view rollercoaster generated from a portfolio value curve -->
+      <TresGroup v-else :position="[0, -6.05, -10.6]" :scale="[1.42, 1.18, 1]">
+        <TresAmbientLight :intensity="8" color="#cde7ff" />
+        <TresDirectionalLight :position="[-4, 6, 5]" :intensity="1.8" color="#fff4e8" />
+
+        <TresGroup v-for="(support, index) in coasterSupports" :key="`support-${index}`" :position="support.position">
+          <TresMesh>
+            <TresBoxGeometry :args="[0.08, support.height, 0.08]" />
+            <TresMeshStandardMaterial color="#1f2b44" :metalness="0.35" :roughness="0.7" />
+          </TresMesh>
+        </TresGroup>
+
+        <TresGroup v-for="(segment, index) in coasterTrackSegments" :key="`segment-${index}`" :position="segment.position" :rotation="segment.rotation">
+          <TresMesh :scale="[segment.length, 0.06, 0.08]">
+            <TresBoxGeometry :args="[1, 1, 1]" />
+            <TresMeshStandardMaterial color="#b7c6d9" :metalness="0.75" :roughness="0.2" />
+          </TresMesh>
+        </TresGroup>
+
+        <TresGroup :position="coasterCartPosition" :rotation="coasterCartRotation">
+          <TresMesh>
+            <TresBoxGeometry :args="[0.38, 0.22, 0.22]" />
+            <TresMeshStandardMaterial color="#ff8c42" :metalness="0.3" :roughness="0.45" />
+          </TresMesh>
+          <TresMesh :position="[0, 0.18, 0]">
+            <TresSphereGeometry :args="[0.11, 16, 16]" />
+            <TresMeshStandardMaterial color="#ffca8b" :metalness="0.15" :roughness="0.25" />
+          </TresMesh>
+        </TresGroup>
+      </TresGroup>
+
       <!-- Spinning logo model in the center -->
       <TresGroup :position="logoPosition" :rotation="[Math.PI / 2, 0, logoSpinZ]" :render-order="10">
         <GLTFModel :path="logoPath" :scale="1.12" :depth-test="false" />
@@ -425,8 +576,15 @@ onUnmounted(() => {
         </TresMesh>
         <Html transform center :position="[0, 0, 0.1]">
           <div class="startup-actions" @click.stop>
-            <button class="start-label" @click="selectSource('true-api')">START</button>
-            <button class="view-label" @click="selectSource('frontend-api')">VIEW FRONTEND</button>
+            <button class="start-label" @click="handlePrimaryAction('true-api')">START</button>
+            <button class="view-label" @click="handlePrimaryAction('frontend-api')">VIEW FRONTEND</button>
+            <label class="coaster-select-wrap">
+              <span class="sr-only">Choose rollercoaster source</span>
+              <select class="coaster-select" @change="handleCoasterSelection">
+                <option value="" disabled selected>{{ sceneMode === 'wave' ? 'ROLLERCOASTER' : 'NEW COASTER' }}</option>
+                <option v-for="option in coasterOptions" :key="option.label" :value="option.label">{{ option.label }}</option>
+              </select>
+            </label>
           </div>
         </Html>
       </TresGroup>
@@ -503,5 +661,52 @@ onUnmounted(() => {
   background: rgba(65, 90, 140, 0.28);
   box-shadow: 0 0 14px rgba(152, 189, 255, 0.2) inset, 0 0 18px rgba(124, 171, 255, 0.16);
   border-color: rgba(166, 203, 255, 0.85);
+}
+
+.coaster-select-wrap {
+  position: relative;
+  width: fit-content;
+}
+
+.coaster-select {
+  display: inline-block;
+  width: auto;
+  inline-size: max-content;
+  min-width: 0;
+  border: 1px solid rgba(166, 232, 199, 0.48);
+  border-radius: 0.15rem;
+  padding: 0.4rem 0.8rem;
+  background: rgba(22, 44, 34, 0.62);
+  color: #e8fff2;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+  text-shadow: 0 0 6px rgba(140, 255, 198, 0.28);
+  appearance: none;
+  box-sizing: border-box;
+  white-space: nowrap;
+  field-sizing: content;
+}
+
+.coaster-select:hover {
+  background: rgba(34, 72, 55, 0.45);
+  box-shadow: 0 0 14px rgba(140, 255, 198, 0.2) inset, 0 0 18px rgba(112, 255, 190, 0.14);
+  border-color: rgba(190, 255, 220, 0.88);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 </style>
