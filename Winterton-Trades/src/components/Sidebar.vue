@@ -4,7 +4,7 @@ import {
   LayoutDashboard,
   List,
   Settings,
-  User,
+  Home,
   Moon,
   Sun,
 } from 'lucide-vue-next'
@@ -45,9 +45,9 @@ function toggleTheme() {
 <template>
   <aside class="sidebar">
     <div class="sidebar-top">
-      <button class="sidebar-btn avatar-btn" title="Profile">
-        <User :size="22" />
-      </button>
+      
+        <Home :size="22" class="avatar-btn"/>
+      
       <button
         v-for="item in navItems"
         :key="item.name"
