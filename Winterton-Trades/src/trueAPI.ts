@@ -17,7 +17,7 @@ export type StrategyName = (typeof STRATEGY_NAMES)[number]
 const DEFAULT_PORTFOLIO: StrategyName = 'mean_reversion'
 
 // Configure this to Caleb's static IP (for example: http://123.45.67.89)
-const TRUE_API_BASE_URL = (import.meta.env.VITE_TRUE_API_BASE_URL as string | undefined)?.trim() || 'http://999.999.999.999'
+const TRUE_API_BASE_URL = (import.meta.env.VITE_TRUE_API_BASE_URL as string | undefined)?.trim() || ''
 
 function normalizeBaseUrl(url: string): string {
   return url.endsWith('/') ? url.slice(0, -1) : url
@@ -36,7 +36,7 @@ function getPortfolio(portfolio?: string): string {
 }
 
 function apiUrl(path: string, query: Record<string, string | number | undefined> = {}): string {
-  const base = normalizeBaseUrl(TRUE_API_BASE_URL)
+  const base = normalizeBaseUrl(TRUE_API_BASE_URL) || window.location.origin
   const route = path.startsWith('/') ? path : `/${path}`
   const url = new URL(`${base}/api${route}`)
 
